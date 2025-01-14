@@ -1,52 +1,50 @@
 <div class="report-container">
-  <div class="report-header">
-    <button (click)="backToProjects()" class="back-button">
-      <span class="mr-2">←</span>Back
-    </button>
-    <h1>Construction Compliance Report</h1>
-  </div>
-
-  <div class="report-content" *ngIf="!isLoading && !errorMessage">
-    <div class="report-meta">
-      <div>
-        <h2>City of Houston</h2>
-        <p>Code of Ordinances</p>
-      </div>
-      <div class="text-right">
-        <p class="text-sm text-gray-500">Report Date:</p>
-        <p class="font-medium">{{ reportDate }}</p>
-      </div>
+    <div class="report-header">
+        <div class="header-left">
+            <button (click)="backToProjects()" class="back-button">
+                ← Back
+            </button>
+            <h1>Construction Compliance Report</h1>
+        </div>
+        <button (click)="printReport()" class="print-button">
+            <span>🖨️</span>
+            Print Report
+        </button>
     </div>
 
-    <div class="project-details">
-      <h3>Project Details</h3>
-      <div class="space-y-2">
-        <p><strong>Project Name:</strong> {{ formData.projectName }}</p>
-        <p><strong>Development Type:</strong> {{ formData.classType }}</p>
-        <p><strong>Building Height:</strong> {{ formData.buildingHeight }} feet</p>
-        <p><strong>Property Size:</strong> {{ formData.propertySize }}</p>
-      </div>
+    <div class="report-content">
+        <div *ngIf="!isLoading && !errorMessage" class="report-body">
+            <div class="report-meta">
+                <div>
+                    <h2>City of Houston</h2>
+                    <p>Code of Ordinances</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500">Report Date:</p>
+                    <p class="font-medium">{{ reportDate }}</p>
+                </div>
+            </div>
+
+            <div class="project-details">
+                <h3>Project Details</h3>
+                <div class="space-y-2">
+                    <p><strong>Project Name:</strong> {{ formData.projectName }}</p>
+                    <p><strong>Development Type:</strong> {{ formData.classType }}</p>
+                </div>
+            </div>
+
+            <div class="requirements-section" [innerHTML]="reportOutput">
+            </div>
+        </div>
+
+        <div *ngIf="isLoading" class="loading">
+            <p>Generating report...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error">
+            <p>{{ errorMessage }}</p>
+            <button (click)="generateReport()" class="retry-button">Try Again</button>
+        </div>
     </div>
-
-    <div class="requirements-section" [innerHTML]="reportOutput">
-      <!-- Only the output field from the API response will be rendered here -->
-    </div>
-
-    <div class="report-actions">
-      <button (click)="printReport()" class="print-button">
-        <span class="mr-2">🖨️</span>Print Report
-      </button>
-      <button (click)="backToProjects()" class="back-button">Back to Projects</button>
-    </div>
-  </div>
-
-  <div *ngIf="isLoading" class="loading">
-    <p>Generating report...</p>
-    <div class="spinner"></div>
-  </div>
-
-  <div *ngIf="errorMessage" class="error">
-    <p>{{ errorMessage }}</p>
-    <button (click)="generateReport()" class="retry-button">Try Again</button>
-  </div>
 </div> 

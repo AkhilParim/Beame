@@ -26,19 +26,14 @@ class ReferencesResponse(BaseModel):
     content: str
     list: List[str]
 
-class FormattedAnswer(BaseModel):
-    content: str
-    thought: str
-    action: str
-    observation: str
-    output: str
 
 class Reference(BaseModel):
     content: str
     references: List[str]
 
 class QueryResponse(BaseModel):
-    formatted_answer: str
-    relevant_documents: Optional[List[str]] = None
-    references: Optional[List[str]] = None
-    additional_context: Optional[List[str]] = None 
+    content: str
+    thought: str
+    action: str
+    observation: str
+    output: str 

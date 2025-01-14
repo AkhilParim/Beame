@@ -8,6 +8,14 @@ interface QueryRequest {
   project_details: any;
 }
 
+interface QueryResponse {
+  content: string;
+  thought: string;
+  action: string;
+  observation: string;
+  output: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,12 +23,12 @@ export class AppService {
 
   constructor(private http: HttpClient) {}
 
-  queryDocuments(question: string, projectDetails: any): Observable<any> {
+  queryDocuments(question: string, projectDetails: any): Observable<QueryResponse> {
     const request: QueryRequest = {
       question,
       project_details: projectDetails
     };
 
-    return this.http.post(`${environment.apiUrl}/query`, request);
+    return this.http.post<QueryResponse>(`${environment.apiUrl}/query`, request);
   }
 } 

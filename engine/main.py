@@ -51,7 +51,8 @@ async def query_documents(query: Query) -> QueryResponse:
             project_details=query.project_details
         )
         
-        return QueryResponse(formatted_answer=formatted_answer)
+        # Return the formatted answer directly as it now matches QueryResponse structure
+        return QueryResponse(content=formatted_answer.content, thought=formatted_answer.thought, action=formatted_answer.action, observation=formatted_answer.observation, output=formatted_answer.output)
     except Exception as e:
         logger.error(f"Error processing query: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

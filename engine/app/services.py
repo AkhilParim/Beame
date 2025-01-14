@@ -4,14 +4,12 @@ Core business logic for processing queries and generating responses.
 """
 
 from typing import List, Tuple
-from engine.app.models import ProjectDetails, ReferencesResponse, FormattedAnswer
+from engine.app.models import ProjectDetails, ReferencesResponse, QueryResponse
 from langchain.prompts import ChatPromptTemplate
 from qdrant_client import models
 import logging
 from .templates import REFERENCES_TEMPLATE, FORMATTED_ANSWER_TEMPLATE
 from fastapi import HTTPException
-from langchain.schema import ValidationError
-from qdrant_client.http.exceptions import APIConnectionError
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +70,7 @@ class QueryService:
     def get_formatted_answer(self, context: List[str], question: str, project_details: ProjectDetails) -> str:
         try:
             prompt = ChatPromptTemplate.from_template(FORMATTED_ANSWER_TEMPLATE)
-            chain = prompt | self.deps.llm.with_structured_output(FormattedAnswer)
+            chain = prompt | self.deps.llm.with_structured_output(QueryResponse)
             
             # Convert project details to a formatted string
             project_details_dict = project_details.model_dump()
@@ -83,7 +81,13 @@ class QueryService:
                 "context": "\n".join(context),
                 "project_details": project_details_str
             })
-            return response.model_dump_json()
+
+            # Log the raw LLM response
+            logger.info("\n=== Raw LLM Response ===")
+            logger.info(response.model_dump_json())
+            logger.info("=======================")
+            
+            return response
         except ValidationError as e:
             logger.error(f"LLM response validation failed in get_formatted_answer: {str(e)}")
             raise HTTPException(status_code=422, detail="Failed to process response")

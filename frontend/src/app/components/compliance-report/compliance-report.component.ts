@@ -5,19 +5,12 @@ import { AppService } from '../../services/app.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-interface FormattedAnswer {
+interface QueryResponse {
   content: string;
   thought: string;
   action: string;
   observation: string;
   output: string;
-}
-
-interface ApiResponse {
-  formatted_answer: string;
-  relevant_documents?: string[];
-  references?: string[];
-  additional_context?: string[];
 }
 
 interface ProjectDetails {
@@ -46,7 +39,6 @@ export class ComplianceReportComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
   reportDate = new Date().toLocaleDateString();
-  formattedAnswer: FormattedAnswer | null = null;
 
   constructor(
     private router: Router,
@@ -90,7 +82,6 @@ export class ComplianceReportComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
     this.reportOutput = null;
-    this.formattedAnswer = null;
 
     const question = `Landscape Buffer yard required or not.
                         Buffer yard dimensions.
@@ -103,36 +94,28 @@ export class ComplianceReportComponent implements OnInit {
                       `;
     const projectDetails = this.formatProjectDetails();
 
-    this.appService.queryDocuments(question, projectDetails)
-      .pipe(
+    this.appService.queryDocuments(question, projectDetails).pipe(
         catchError(error => {
-          console.error('API Error:', error);
-          this.errorMessage = 'Failed to generate report. Please try again.';
-          return of(null);
+        console.error('API Error:', error);
+        this.errorMessage = 'Failed to generate report. Please try again.';
+        return of(null);
         }),
         finalize(() => {
-          this.isLoading = false;
+        this.isLoading = false;
         })
-      )
-      .subscribe((response: ApiResponse) => {
+    ).subscribe((response: QueryResponse | null) => {
         if (response) {
-          try {
-            this.formattedAnswer = JSON.parse(response.formatted_answer);
-            console.log("Parsed FormattedAnswer:", this.formattedAnswer);  
-            this.reportOutput = this.formattedAnswer?.output || null;
-          } catch (e) {
-            console.error('Error processing response:', e);
-            this.errorMessage = 'Error processing report data';
-          }
+        console.log("API Response:", response);
+        this.reportOutput = response.output;
         }
-      });
-  }
+    });
+}
 
-  printReport() {
-    window.print();
-  }
+    printReport() {
+        window.print();
+    }
 
-  backToProjects() {
-    this.router.navigate(['/new-project']);
-  }
+    backToProjects() {
+        this.router.navigate(['/new-project']);
+    }
 } 
