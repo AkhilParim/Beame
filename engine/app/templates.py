@@ -54,11 +54,12 @@ FORMATTED_ANSWER_TEMPLATE = """
     Apply the same approach to any topic provided in the context (e.g., fire safety compliance, water regulations, road requirements).
 
     Output format:
-    A json object with key content.
+    A json object with the keys content, thought, action, observation, and output.
     
     Output Example:
-    {{content: "a string value of the output -> Utilize the HTML tags <p>, <ol>, <ul>, <li> for the output to be embedded into HTML. Refrain from giving any sentences without any of these tags."}}.
+    {{content: "a string value of anything you would like to say about the output", thought: "a string value of the thought process", action: "a string value of the actions taken", observation: "a string value of the observations", output: "a string value of the output -> Utilize the HTML tags <p>, <ol>, <ul>, <li> for the output to be embedded into HTML. Refrain from giving any sentences without any of these tags."}}.
                             
     Topic: {topic}
     Context: {context}
+    Project Details: {project_details}
 """

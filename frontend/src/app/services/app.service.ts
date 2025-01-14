@@ -3,27 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-export interface QueryRequest {
+interface QueryRequest {
   question: string;
-}
-
-export interface QueryResponse {
-  formatted_answer: string;
-  relevant_documents?: string[];
-  references?: string[];
-  additional_context?: string[];
+  project_details: any;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
-  private apiUrl = `${environment.apiUrl}/query`;
 
   constructor(private http: HttpClient) {}
 
-  queryDocuments(question: string): Observable<QueryResponse> {
-    const request: QueryRequest = { question };
-    return this.http.post<QueryResponse>(this.apiUrl, request);
+  queryDocuments(question: string, projectDetails: any): Observable<any> {
+    const request: QueryRequest = {
+      question,
+      project_details: projectDetails
+    };
+
+    return this.http.post(`${environment.apiUrl}/query`, request);
   }
 } 

@@ -1,10 +1,11 @@
 #type: ignore
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.models import Query, QueryResponse
-from app.dependencies import Dependencies
-from app.services import QueryService
+from engine.app.models import Query, QueryResponse
+from engine.app.dependencies import Dependencies
+from engine.app.services import QueryService
 import logging
+import json
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -17,39 +18,38 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI app
 app = FastAPI()
 
-# Add CORS middleware
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["http://localhost:4200"],  # In production, replace with specific origins
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize dependencies and services
+# Initialize dependencies
 deps = Dependencies()
 query_service = QueryService(deps)
 
 @app.post("/query", response_model=QueryResponse)
-async def query_documents(query: Query):
-    """
-    Query documents and get relevant references with formatted answer
-    """
+async def query_documents(query: Query) -> QueryResponse:
     try:
-        logger.info(f"Processing query: {query.question}")
-        
         # Get relevant documents
-        docs = deps.retriever.get_relevant_documents(query.question)
-        docs_content = [d.page_content for d in docs]
+        docs_content = query_service.get_relevant_documents(
+            question=query.question,
+            project_details=query.project_details
+        )
         
-        # Get references and additional context
-        references, additional_context = query_service.get_references_data(docs_content)
-        
-        # Combine all context for the formatted answer
-        all_context = docs_content + additional_context
+        # Get references and their context
+        references, ref_context = query_service.get_references_data(docs_content)
+        all_context = docs_content + ref_context
         
         # Get formatted answer
-        formatted_answer = query_service.get_formatted_answer(all_context, query.question)
+        formatted_answer = query_service.get_formatted_answer(
+            context=all_context,
+            question=query.question,
+            project_details=query.project_details
+        )
         
         return QueryResponse(formatted_answer=formatted_answer)
     except Exception as e:

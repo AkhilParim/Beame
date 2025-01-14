@@ -11,6 +11,7 @@ import {
   streetTypes, 
   floodplainZones 
 } from '../../data/form-data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-project',
@@ -32,7 +33,7 @@ export class NewProjectComponent {
 
   constructor(
     private fb: FormBuilder,
-    private appService: AppService
+    private router: Router
   ) {
     this.projectForm = this.fb.group({
       projectName: [''],
@@ -68,33 +69,8 @@ export class NewProjectComponent {
   onSubmit() {
     if (this.projectForm.valid) {
       const formData = this.projectForm.value;
-      console.log('Form Data:', formData);
-
-      // Reset state
-      this.isLoading = true;
-      this.errorMessage = null;
-
-      // Example query based on form data
-      const question = `What are the requirements for a ${formData.classType} development with building height ${formData.buildingHeight} feet?`;
-
-      this.appService.queryDocuments(question)
-        .pipe(
-          catchError(error => {
-            console.error('API Error:', error);
-            this.errorMessage = 'Failed to fetch requirements. Please try again.';
-            return of(null);
-          }),
-          finalize(() => {
-            this.isLoading = false;
-          })
-        )
-        .subscribe(response => {
-          if (response) {
-            console.log('API Response:', response);
-            // Handle the response - you might want to store it in a property
-            // or emit it to a parent component
-          }
-        });
+      // Navigate to report page with form data
+      this.router.navigate(['/report'], { state: { formData } });
     }
   }
 

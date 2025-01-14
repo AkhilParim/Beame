@@ -1,0 +1,116 @@
+.report-container {
+  @apply max-w-5xl mx-auto p-5 bg-white;
+}
+
+.report-header {
+  @apply flex items-center gap-5 mb-8;
+
+  h1 {
+    @apply text-2xl font-bold text-gray-800;
+  }
+}
+
+.report-meta {
+  @apply flex justify-between mb-8;
+
+  h2 {
+    @apply text-xl font-semibold text-gray-800;
+  }
+
+  p {
+    @apply text-gray-600;
+  }
+}
+
+.report-content {
+  @apply p-6 border border-gray-200 rounded-lg shadow-sm;
+}
+
+.project-details {
+  @apply mb-6;
+
+  h3 {
+    @apply text-lg font-semibold mb-4 text-gray-800;
+  }
+
+  p {
+    @apply mb-2 text-gray-700;
+  }
+
+  strong {
+    @apply font-medium;
+  }
+}
+
+.requirements-section {
+  @apply my-6;
+
+  :deep(h2) {
+    @apply text-lg font-semibold mb-4 text-gray-800;
+  }
+
+  :deep(ul) {
+    @apply space-y-3;
+  }
+
+  :deep(li) {
+    @apply text-gray-700;
+  }
+}
+
+.report-actions {
+  @apply flex gap-3 justify-end mt-6;
+}
+
+button {
+  @apply px-4 py-2 rounded-md transition-colors duration-200;
+
+  &.print-button {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  &.back-button {
+    @apply bg-gray-600 text-white hover:bg-gray-700;
+  }
+}
+
+.loading {
+  @apply flex flex-col items-center justify-center p-8 space-y-4;
+  
+  .spinner {
+    @apply w-8 h-8 border-4 border-gray-300 rounded-full;
+    border-top-color: #3b82f6;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  @apply flex flex-col items-center justify-center p-8 space-y-4;
+  
+  p {
+    @apply text-red-600 text-center;
+  }
+  
+  .retry-button {
+    @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors;
+  }
+}
+
+@media print {
+  .report-actions, .back-button {
+    @apply hidden;
+  }
+
+  .report-container {
+    @apply p-0 shadow-none;
+  }
+
+  .report-content {
+    @apply border-none shadow-none;
+  }
+} 
