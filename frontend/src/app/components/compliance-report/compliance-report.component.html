@@ -6,7 +6,7 @@
             </button>
             <h1>Construction Compliance Report</h1>
         </div>
-        <button (click)="printReport()" class="print-button">
+        <button (click)="printReport()" class="print-button" *ngIf="!isLoading && !errorMessage">
             <span>🖨️</span>
             Print Report
         </button>

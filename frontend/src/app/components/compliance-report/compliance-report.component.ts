@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppService } from '../../services/app.service';
 import { catchError, finalize } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 
 interface QueryResponse {
   content: string;
@@ -78,44 +78,65 @@ export class ComplianceReportComponent implements OnInit {
   }
 
   generateReport() {
-    // Reset states before making the API call
     this.isLoading = true;
     this.errorMessage = null;
     this.reportOutput = null;
 
-    const question = `Landscape Buffer yard required or not.
-                        Buffer yard dimensions.
-                        Building height requirements.
-                        Type of building requirements.
-                        Planting requirements within the buffer yard.
-                        Screening requirements within the buffer yard.
-                        Building restrictions within the setback.
-                        grading/elevations restrictions.
-                      `;
+    const questions = [
+      'What are the Landscape Buffer yard requirements?',
+      // 'What are the Buffer yard dimensions?',
+      // 'What are the Building height requirements?',
+      // 'What are the Type of building requirements?',
+      'What are the Planting requirements within the buffer yard?',
+      // 'What are the Screening requirements within the buffer yard?',
+      // 'What are the Building restrictions within the setback?',
+      // 'What are the grading/elevations restrictions?'
+    ];
+
     const projectDetails = this.formatProjectDetails();
-
-    this.appService.queryDocuments(question, projectDetails).pipe(
+    
+    // Create an array of API calls
+    const apiCalls = questions.map(question => 
+      this.appService.queryDocuments(question, projectDetails).pipe(
         catchError(error => {
-        console.error('API Error:', error);
-        this.errorMessage = 'Failed to generate report. Please try again.';
-        return of(null);
-        }),
-        finalize(() => {
-        this.isLoading = false;
+          console.error('API Error:', error);
+          return of(null);
         })
-    ).subscribe((response: QueryResponse | null) => {
-        if (response) {
-        console.log("API Response:", response);
-        this.reportOutput = response.output;
+      )
+    );
+
+    // Execute all API calls in parallel
+    forkJoin(apiCalls).pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (responses) => {
+        // Check if any response is null (indicating an error)
+        if (responses.some(response => response === null)) {
+          this.errorMessage = 'Failed to generate some parts of the report. Please try again.';
+          return;
         }
+
+        // Combine all responses into a single formatted output
+        const combinedOutput = responses.map((response) => {
+          return `${(response as QueryResponse).output}`;
+        }).join('\n\n');
+
+        this.reportOutput = combinedOutput;
+      },
+      error: (error) => {
+        console.error('ForkJoin Error:', error);
+        this.errorMessage = 'Failed to generate report. Please try again.';
+      }
     });
-}
+  }
 
-    printReport() {
-        window.print();
-    }
+  printReport() {
+    window.print();
+  }
 
-    backToProjects() {
-        this.router.navigate(['/new-project']);
-    }
+  backToProjects() {
+    this.router.navigate(['/new-project']);
+  }
 } 

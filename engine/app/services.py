@@ -60,12 +60,15 @@ class QueryService:
                 if len(result):
                     context.append(result[0].page_content)
             return list(references), context
-        except ValidationError as e:
-            logger.error(f"LLM response validation failed in get_references_data: {str(e)}")
-            raise HTTPException(status_code=422, detail="Failed to process response")
-        except APIConnectionError as e:
-            logger.error(f"API connection failed in get_references_data: {str(e)}")
-            raise HTTPException(status_code=503, detail="Service temporarily unavailable")
+        except Exception as e:
+            logger.error(f"Error in get_references_data: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+        # except ValidationError as e:
+        #     logger.error(f"LLM response validation failed in get_references_data: {str(e)}")
+        #     raise HTTPException(status_code=422, detail="Failed to process response")
+        # except APIConnectionError as e:
+        #     logger.error(f"API connection failed in get_references_data: {str(e)}")
+        #     raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 
     def get_formatted_answer(self, context: List[str], question: str, project_details: ProjectDetails) -> str:
         try:
@@ -88,9 +91,12 @@ class QueryService:
             logger.info("=======================")
             
             return response
-        except ValidationError as e:
-            logger.error(f"LLM response validation failed in get_formatted_answer: {str(e)}")
-            raise HTTPException(status_code=422, detail="Failed to process response")
-        except APIConnectionError as e:
-            logger.error(f"API connection failed in get_formatted_answer: {str(e)}")
-            raise HTTPException(status_code=503, detail="Service temporarily unavailable")
+        except Exception as e:
+            logger.error(f"Error in get_formatted_answer: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+        # except ValidationError as e:
+        #     logger.error(f"LLM response validation failed in get_formatted_answer: {str(e)}")
+        #     raise HTTPException(status_code=422, detail="Failed to process response")
+        # except APIConnectionError as e:
+        #     logger.error(f"API connection failed in get_formatted_answer: {str(e)}")
+        #     raise HTTPException(status_code=503, detail="Service temporarily unavailable")

@@ -13,10 +13,10 @@ class Settings(BaseSettings):
     QDRANT_URL: str = os.getenv("QDRANT_URL")
     QDRANT_API_KEY: str = os.getenv("QDRANT_API_KEY")
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY")
+    LLM_MODEL: str = os.getenv("LLM_MODEL")
     
     QDRANT_COLLECTION: str = "city-of-houston"
     EMBEDDING_MODEL: str = "text-embedding-3-large"
-    LLM_MODEL: str = "claude-3-5-sonnet-latest"
     
     class Config:
         case_sensitive = True
