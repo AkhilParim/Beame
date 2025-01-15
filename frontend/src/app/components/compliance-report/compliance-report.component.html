@@ -1,3 +1,10 @@
+<div *ngIf="isGenerating" class="generating-banner">
+    <div class="flex items-center gap-2">
+        <div class="spinner"></div>
+        <p>Report is still being generated. Please don't leave this page.</p>
+    </div>
+</div>
+
 <div class="report-container">
     <div class="report-header">
         <div class="header-left">
@@ -6,14 +13,14 @@
             </button>
             <h1>Construction Compliance Report</h1>
         </div>
-        <button (click)="printReport()" class="print-button" *ngIf="!isLoading && !errorMessage">
+        <button (click)="printReport()" class="print-button" *ngIf="!isGenerating">
             <span>🖨️</span>
             Print Report
         </button>
     </div>
 
     <div class="report-content">
-        <div *ngIf="!isLoading && !errorMessage" class="report-body">
+        <div class="report-body">
             <div class="report-meta">
                 <div>
                     <h2>City of Houston</h2>
@@ -33,18 +40,30 @@
                 </div>
             </div>
 
-            <div class="requirements-section" [innerHTML]="reportOutput">
+            <div class="requirements-sections">
+                <div *ngFor="let section of reportSections" class="section">
+                    <h3>{{ section.question }}</h3>
+                    
+                    <div *ngIf="section.isLoading" class="section-loading">
+                        <div class="spinner"></div>
+                        <p>Loading requirements...</p>
+                    </div>
+
+                    <div *ngIf="section.error" class="section-error">
+                        <p>{{ section.error }}</p>
+                    </div>
+
+                    <div *ngIf="!section.isLoading && !section.error && section.response" 
+                         class="section-content"
+                         [innerHTML]="section.response.output">
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div *ngIf="isLoading" class="loading">
-            <p>Generating report...</p>
-            <div class="spinner"></div>
-        </div>
-
-        <div *ngIf="errorMessage" class="error">
-            <p>{{ errorMessage }}</p>
-            <button (click)="generateReport()" class="retry-button">Try Again</button>
+            <div *ngIf="isGenerating" class="report-status">
+                <p>Still generating more sections...</p>
+                <div class="spinner"></div>
+            </div>
         </div>
     </div>
 </div> 

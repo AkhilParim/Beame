@@ -13,6 +13,13 @@ interface QueryResponse {
   output: string;
 }
 
+interface ReportSection {
+  question: string;
+  response: QueryResponse | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
 interface ProjectDetails {
   projectName?: string;
   projectDescription?: string;
@@ -35,10 +42,11 @@ interface ProjectDetails {
 })
 export class ComplianceReportComponent implements OnInit {
   formData: any;
-  reportOutput: string | null = null;
-  isLoading = true;
-  errorMessage: string | null = null;
+  reportSections: ReportSection[] = [];
+  isGenerating = false;
   reportDate = new Date().toLocaleDateString();
+  private completedApiCalls = 0;
+  private totalApiCalls = 0;
 
   constructor(
     private router: Router,
@@ -77,58 +85,60 @@ export class ComplianceReportComponent implements OnInit {
     };
   }
 
-  generateReport() {
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.reportOutput = null;
+  private checkAllApisCompleted() {
+    this.completedApiCalls++;
+    if (this.completedApiCalls === this.totalApiCalls) {
+      this.isGenerating = false;
+    }
+  }
 
+  generateReport() {
+    this.isGenerating = true;
+    this.completedApiCalls = 0;
+    
     const questions = [
       'What are the Landscape Buffer yard requirements?',
-      // 'What are the Buffer yard dimensions?',
-      // 'What are the Building height requirements?',
-      // 'What are the Type of building requirements?',
+      'What are the Buffer yard dimensions?',
+      'What are the Building height requirements?',
+      'What are the Type of building requirements?',
       'What are the Planting requirements within the buffer yard?',
-      // 'What are the Screening requirements within the buffer yard?',
-      // 'What are the Building restrictions within the setback?',
-      // 'What are the grading/elevations restrictions?'
+      'What are the Screening requirements within the buffer yard?',
+      'What are the Building restrictions within the setback?',
+      'What are the grading/elevations restrictions?'
     ];
+
+    this.totalApiCalls = questions.length;
+
+    // Initialize report sections
+    this.reportSections = questions.map(question => ({
+      question,
+      response: null,
+      isLoading: true,
+      error: null
+    }));
 
     const projectDetails = this.formatProjectDetails();
     
-    // Create an array of API calls
-    const apiCalls = questions.map(question => 
-      this.appService.queryDocuments(question, projectDetails).pipe(
-        catchError(error => {
-          console.error('API Error:', error);
-          return of(null);
-        })
-      )
-    );
-
-    // Execute all API calls in parallel
-    forkJoin(apiCalls).pipe(
-      finalize(() => {
-        this.isLoading = false;
-      })
-    ).subscribe({
-      next: (responses) => {
-        // Check if any response is null (indicating an error)
-        if (responses.some(response => response === null)) {
-          this.errorMessage = 'Failed to generate some parts of the report. Please try again.';
-          return;
-        }
-
-        // Combine all responses into a single formatted output
-        const combinedOutput = responses.map((response) => {
-          return `${(response as QueryResponse).output}`;
-        }).join('\n\n');
-
-        this.reportOutput = combinedOutput;
-      },
-      error: (error) => {
-        console.error('ForkJoin Error:', error);
-        this.errorMessage = 'Failed to generate report. Please try again.';
-      }
+    // Make individual API calls for each question
+    questions.forEach((question, index) => {
+      this.appService.queryDocuments(question, projectDetails)
+        .pipe(
+          catchError(error => {
+            console.error(`Error fetching response for question: ${question}`, error);
+            return of(null);
+          }),
+          finalize(() => {
+            this.reportSections[index].isLoading = false;
+            this.checkAllApisCompleted();
+          })
+        )
+        .subscribe(response => {
+          if (response) {
+            this.reportSections[index].response = response;
+          } else {
+            this.reportSections[index].error = 'Failed to load this section';
+          }
+        });
     });
   }
 
