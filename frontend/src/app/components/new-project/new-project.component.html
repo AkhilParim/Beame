@@ -1,25 +1,26 @@
 <div class="form-container">
   <div class="flex items-center mb-6">
-    <!-- <a href="#" class="text-gray-600 hover:text-gray-800 mr-4 border border-gray-300 rounded-md py-2 px-4">← Back</a> -->
-    <h1 class="text-2xl font-bold">Pre-design Report</h1>
+    <h1 class="text-2xl font-bold">{{isTestMode ? 'API Test Mode' : 'Pre-design Report'}}</h1>
   </div>
 
   <div class="form-card">
-    <h2 class="text-xl font-semibold mb-6">City of Houston - City Ordinance</h2>
+    <h2 class="text-xl font-semibold mb-6">{{isTestMode ? 'Test API Query' : 'City of Houston - City Ordinance'}}</h2>
 
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
       <div class="space-y-6">
-        <div>
-          <label class="form-label">Project Name</label>
-          <input type="text" class="form-input" formControlName="projectName" 
-                 placeholder="Enter project name">
-        </div>
+        <ng-container *ngIf="!isTestMode">   <!-- not showing in test mode -->
+          <div>
+            <label class="form-label">Project Name</label>
+            <input type="text" class="form-input" formControlName="projectName" 
+                    placeholder="Enter project name">
+          </div>
 
-        <div>
-          <label class="form-label">Project Description</label>
-          <textarea class="form-input" formControlName="projectDescription" 
-                    placeholder="Describe your project"></textarea>
-        </div>
+          <div>
+            <label class="form-label">Project Description</label>
+            <textarea class="form-input" formControlName="projectDescription" 
+                      placeholder="Describe your project"></textarea>
+          </div>
+        </ng-container>
 
         <div class="form-grid">
           <div>
@@ -51,12 +52,12 @@
           <div>
             <label class="form-label">Property Size (acres)</label>
             <input type="number" min="0" class="form-input" formControlName="propertySize" 
-                   placeholder="Enter acres">
+                    placeholder="Enter acres">
           </div>
           <div>
             <label class="form-label">Building Height (feet)</label>
             <input type="number" min="0" class="form-input" formControlName="buildingHeight" 
-                   placeholder="Enter height in feet">
+                    placeholder="Enter height in feet">
           </div>
         </div>
 
@@ -89,8 +90,14 @@
           </select>
         </div>
 
+        <div *ngIf="isTestMode">
+          <label class="form-label">Test Query</label>
+          <textarea class="form-input" formControlName="testQuery" 
+                    placeholder="Enter your test query"></textarea>
+        </div>
+
         <button type="submit" class="form-button">
-          Generate Report
+          {{isTestMode ? 'Test Query' : 'Generate Report'}}
         </button>
       </div>
     </form>

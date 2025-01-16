@@ -72,7 +72,7 @@
 
 .requirements-sections {
   .section {
-    @apply mb-8 pb-4 border-b border-gray-200;
+    @apply mb-8 pb-4 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0;
 
     h3 {
       @apply text-lg font-semibold mb-4 m-0 text-blue-900;
@@ -93,16 +93,57 @@
     .section-content {
       @apply leading-relaxed;
 
-      p {
-        @apply my-4;
-      }
+      ::ng-deep {
+        p {
+          @apply my-4 text-gray-700 text-base;
 
-      ul, ol {
-        @apply my-4 pl-6;
-      }
+          /* Style for title paragraphs (ending with a colon) */
+          &:matches([text*=":"]) {
+            @apply text-xl font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-3;
+          }
 
-      li {
-        @apply my-2;
+          /* Style for note paragraphs (starting with "Note:") */
+          &:matches([text^="Note"]) {
+            @apply text-sm italic text-gray-600 bg-blue-50 p-3 rounded-md;
+          }
+        }
+
+        ol {
+          @apply space-y-3;
+          list-style: none;
+          counter-reset: section;
+
+          & > li {
+            @apply relative pl-6 text-base;
+            counter-increment: section;
+
+            &:before {
+              @apply absolute left-0 top-0 font-semibold text-gray-700;
+              content: counter(section) ".";
+            }
+          }
+        }
+
+        ul {
+          @apply mt-2 space-y-1.5 bg-gray-50 rounded p-3;
+
+          li {
+            @apply text-gray-700 pl-4 relative text-base;
+
+            &:before {
+              content: "•";
+              @apply absolute left-1 text-gray-500;
+            }
+
+            & > ul {
+              @apply px-6 py-0;
+            }
+          }
+        }
+
+        li {
+          @apply text-gray-700;
+        }
       }
     }
   }
@@ -136,4 +177,4 @@
   .report-content {
     @apply shadow-none;
   }
-} 
+}

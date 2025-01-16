@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AppService } from '../../services/app.service';
-import { catchError, finalize } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { 
   DevelopmentClass, 
   developmentClasses, 
@@ -11,7 +8,7 @@ import {
   streetTypes, 
   floodplainZones 
 } from '../../data/form-data';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-new-project',
@@ -22,8 +19,7 @@ import { Router } from '@angular/router';
 })
 export class NewProjectComponent {
   projectForm: FormGroup;
-  isLoading = false;
-  errorMessage: string | null = null;
+  isTestMode = false;
 
   developmentClasses: DevelopmentClass[] = developmentClasses;
   developmentStatuses = developmentStatuses;
@@ -33,8 +29,11 @@ export class NewProjectComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    this.isTestMode = this.route.snapshot.data['isTestMode'] || false;
+
     this.projectForm = this.fb.group({
       projectName: [''],
       projectDescription: [''],
@@ -48,7 +47,8 @@ export class NewProjectComponent {
       adjacentStreet2: [''],
       adjacentStreet3: [''],
       adjacentStreet4: [''],
-      floodplainZone: ['']
+      floodplainZone: [''],
+      testQuery: ['']
     });
 
     this.projectForm.get('developmentType')?.valueChanges.subscribe(selectedType => {
@@ -69,7 +69,6 @@ export class NewProjectComponent {
   onSubmit() {
     if (this.projectForm.valid) {
       const formData = this.projectForm.value;
-      // Navigate to report page with form data
       this.router.navigate(['/report'], { state: { formData } });
     }
   }

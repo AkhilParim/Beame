@@ -4,6 +4,7 @@ import { ComplianceReportComponent } from './components/compliance-report/compli
 
 export const routes: Routes = [
   { path: 'new-project', component: NewProjectComponent },
+  { path: 'testapi', component: NewProjectComponent, data: { isTestMode: true } },
   { path: 'report', component: ComplianceReportComponent },
   { path: '', redirectTo: '/new-project', pathMatch: 'full' }
 ];

@@ -1,10 +1,9 @@
-#type: ignore
 """
 Core business logic for processing queries and generating responses.
 """
 
 from typing import List, Tuple
-from engine.app.models import ProjectDetails, ReferencesResponse, QueryResponse
+from engine.app.models import ReferencesResponse, QueryResponse
 from langchain.prompts import ChatPromptTemplate
 from qdrant_client import models
 import logging
@@ -17,17 +16,12 @@ class QueryService:
     def __init__(self, deps):
         self.deps = deps
 
-    def get_relevant_documents(self, question: str, project_details: ProjectDetails) -> List[str]:
+    def get_relevant_documents(self, question: str, project_details: str) -> List[str]:
         """
         Retrieve relevant documents for a given question and project details.
         """
         try:
-            # Format project details into a string
-            project_details_dict = project_details.model_dump()
-            project_details_str = ", ".join([f"{k}: {v}" for k, v in project_details_dict.items()])
-            
-            # Combine question with project details
-            full_query = f"{question} for the requirements {project_details_str}"
+            full_query = f"{question} for the requirements {project_details}"
             
             docs = self.deps.retriever.get_relevant_documents(full_query)
             return [doc.page_content for doc in docs]
@@ -70,25 +64,16 @@ class QueryService:
         #     logger.error(f"API connection failed in get_references_data: {str(e)}")
         #     raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 
-    def get_formatted_answer(self, context: List[str], question: str, project_details: ProjectDetails) -> str:
+    def get_formatted_answer(self, context: List[str], question: str, project_details: str) -> str:
         try:
             prompt = ChatPromptTemplate.from_template(FORMATTED_ANSWER_TEMPLATE)
             chain = prompt | self.deps.llm.with_structured_output(QueryResponse)
             
-            # Convert project details to a formatted string
-            project_details_dict = project_details.model_dump()
-            project_details_str = "\n".join([f"{k}: {v}" for k, v in project_details_dict.items()])
-            
             response = chain.invoke({
                 "topic": question,
                 "context": "\n".join(context),
-                "project_details": project_details_str
+                "project_details": "\n".join(project_details)
             })
-
-            # Log the raw LLM response
-            logger.info("\n=== Raw LLM Response ===")
-            logger.info(response.model_dump_json())
-            logger.info("=======================")
             
             return response
         except Exception as e:

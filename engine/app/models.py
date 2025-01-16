@@ -6,21 +6,9 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 # These are the pydantic models for the query and reference
-class ProjectDetails(BaseModel):
-    projectName: Optional[str] = None
-    projectDescription: Optional[str] = None
-    developmentType: str
-    classType: str
-    developmentStatus: str
-    propertySize: str
-    buildingHeight: str
-    numberOfStreets: str
-    adjacentStreets: List[str]
-    floodplainZone: str
-
 class Query(BaseModel):
     question: str
-    project_details: ProjectDetails
+    project_details: str
 
 class ReferencesResponse(BaseModel):
     content: str

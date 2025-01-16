@@ -20,19 +20,6 @@ interface ReportSection {
   error: string | null;
 }
 
-interface ProjectDetails {
-  projectName?: string;
-  projectDescription?: string;
-  developmentType: string;
-  classType: string;
-  developmentStatus: string;
-  propertySize: string;
-  buildingHeight: string;
-  numberOfStreets: number;
-  adjacentStreets: string[];
-  floodplainZone: string;
-}
-
 @Component({
   selector: 'app-compliance-report',
   standalone: true,
@@ -64,7 +51,7 @@ export class ComplianceReportComponent implements OnInit {
     this.generateReport();
   }
 
-  formatProjectDetails(): ProjectDetails {
+  formatProjectDetails(): string {
     const adjacentStreets = [];
     for (let i = 1; i <= Number(this.formData.numberOfStreets); i++) {
       const street = this.formData[`adjacentStreet${i}`];
@@ -73,16 +60,25 @@ export class ComplianceReportComponent implements OnInit {
       }
     }
 
-    return {
+    const details = {
       developmentType: this.formData.developmentType.toString(),
       classType: this.formData.classType.toString(),
       developmentStatus: this.formData.developmentStatus.toString(),
-      propertySize: this.formData.propertySize.toString(),
-      buildingHeight: this.formData.buildingHeight.toString(),
-      numberOfStreets: this.formData.numberOfStreets.toString(),
+      propertySize: this.formData.propertySize.toString() + ' acres',
+      buildingHeight: this.formData.buildingHeight.toString() + ' feet',
+      numberOfAdjacentStreets: this.formData.numberOfStreets.toString(),
       adjacentStreets: adjacentStreets,
       floodplainZone: this.formData.floodplainZone.toString()
     };
+
+    // Create the details string
+    const detailsEntries = Object.entries(details).filter(([key]) => key !== 'adjacentStreets');
+    const detailsString = [
+      ...detailsEntries.map(([k, v]) => `${k}: ${v}`),
+      `adjacentStreets: ${details.adjacentStreets.join(', ')}`
+    ].join(', ');
+
+    return detailsString
   }
 
   private checkAllApisCompleted() {
@@ -96,16 +92,12 @@ export class ComplianceReportComponent implements OnInit {
     this.isGenerating = true;
     this.completedApiCalls = 0;
     
-    const questions = [
-      'What are the Landscape Buffer yard requirements?',
-      'What are the Buffer yard dimensions?',
-      'What are the Building height requirements?',
-      'What are the Type of building requirements?',
-      'What are the Planting requirements within the buffer yard?',
-      'What are the Screening requirements within the buffer yard?',
-      'What are the Building restrictions within the setback?',
-      'What are the grading/elevations restrictions?'
-    ];
+    const questions = this.formData.testQuery ? 
+      [this.formData.testQuery] : // Use test query if available
+      [
+        'What are the Landscape Buffer yard requirements?',
+        'What are the Planting requirements within the buffer yard?',
+      ];
 
     this.totalApiCalls = questions.length;
 
@@ -117,11 +109,11 @@ export class ComplianceReportComponent implements OnInit {
       error: null
     }));
 
-    const projectDetails = this.formatProjectDetails();
+    const projectDetailsString = this.formatProjectDetails();
     
     // Make individual API calls for each question
     questions.forEach((question, index) => {
-      this.appService.queryDocuments(question, projectDetails)
+      this.appService.queryDocuments(question, projectDetailsString)
         .pipe(
           catchError(error => {
             console.error(`Error fetching response for question: ${question}`, error);

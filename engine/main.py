@@ -1,11 +1,9 @@
-#type: ignore
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from engine.app.models import Query, QueryResponse
 from engine.app.dependencies import Dependencies
 from engine.app.services import QueryService
 import logging
-import json
 from dotenv import load_dotenv
 
 # Load environment variables
