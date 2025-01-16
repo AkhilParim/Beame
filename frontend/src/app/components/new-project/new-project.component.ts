@@ -42,7 +42,7 @@ export class NewProjectComponent {
       developmentStatus: [''],
       propertySize: [''],
       buildingHeight: [''],
-      numberOfStreets: [0],
+      numberOfStreets: [1],
       adjacentStreet1: [''],
       adjacentStreet2: [''],
       adjacentStreet3: [''],

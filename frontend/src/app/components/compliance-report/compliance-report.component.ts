@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppService } from '../../services/app.service';
 import { catchError, finalize } from 'rxjs/operators';
-import { forkJoin, of } from 'rxjs';
+import { of } from 'rxjs';
+import { complianceQuestions } from '../../data/compliance-questions';
 
 interface QueryResponse {
   content: string;
@@ -14,7 +15,7 @@ interface QueryResponse {
 }
 
 interface ReportSection {
-  question: string;
+  title: string;
   response: QueryResponse | null;
   isLoading: boolean;
   error: string | null;
@@ -93,17 +94,14 @@ export class ComplianceReportComponent implements OnInit {
     this.completedApiCalls = 0;
     
     const questions = this.formData.testQuery ? 
-      [this.formData.testQuery] : // Use test query if available
-      [
-        'What are the Landscape Buffer yard requirements?',
-        'What are the Planting requirements within the buffer yard?',
-      ];
+      [{title: 'Test Query', question: this.formData.testQuery}] : // Use test query if available
+      complianceQuestions;
 
     this.totalApiCalls = questions.length;
 
     // Initialize report sections
-    this.reportSections = questions.map(question => ({
-      question,
+    this.reportSections = questions.map(({title}) => ({
+      title: title,
       response: null,
       isLoading: true,
       error: null
@@ -112,7 +110,7 @@ export class ComplianceReportComponent implements OnInit {
     const projectDetailsString = this.formatProjectDetails();
     
     // Make individual API calls for each question
-    questions.forEach((question, index) => {
+    questions.forEach(({question}, index) => {
       this.appService.queryDocuments(question, projectDetailsString)
         .pipe(
           catchError(error => {

@@ -23,7 +23,7 @@
 }
 
 .report-container {
-  @apply max-w-7xl mx-auto p-8;
+  @apply max-w-5xl mx-auto p-8;
 }
 
 .report-header {
@@ -125,7 +125,7 @@
         }
 
         ul {
-          @apply mt-2 space-y-1.5 bg-gray-50 rounded p-3;
+          @apply mt-2 space-y-1.5 bg-gray-50 rounded-lg p-3;
 
           li {
             @apply text-gray-700 pl-4 relative text-base;

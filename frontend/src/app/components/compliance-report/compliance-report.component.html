@@ -42,7 +42,7 @@
 
             <div class="requirements-sections">
                 <div *ngFor="let section of reportSections" class="section">
-                    <h3>{{ section.question }}</h3>
+                    <h3>{{ section.title }}</h3>
                     
                     <div *ngIf="section.isLoading" class="section-loading">
                         <div class="spinner"></div>
