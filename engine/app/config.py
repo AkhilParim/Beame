@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     QDRANT_API_KEY: str = os.getenv("QDRANT_API_KEY")
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY")
     LLM_MODEL: str = os.getenv("LLM_MODEL")
+    ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS")
     
     QDRANT_COLLECTION: str = "city-of-houston"
     EMBEDDING_MODEL: str = "text-embedding-3-large"

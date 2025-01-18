@@ -5,6 +5,7 @@ from engine.app.dependencies import Dependencies
 from engine.app.services import QueryService
 import logging
 from dotenv import load_dotenv
+from engine.app.config import settings
 
 # Load environment variables
 load_dotenv()
@@ -19,7 +20,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # In production, replace with specific origins
+    allow_origins=[settings.ALLOWED_ORIGINS],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
