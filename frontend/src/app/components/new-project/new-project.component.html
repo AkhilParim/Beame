@@ -10,9 +10,13 @@
       <div class="space-y-6">
         <ng-container *ngIf="!isTestMode">   <!-- not showing in test mode -->
           <div>
-            <label class="form-label">Project Name</label>
+            <label class="form-label">Project Name <span class="text-red-500">*</span></label>
             <input type="text" class="form-input" formControlName="projectName" 
-                    placeholder="Enter project name">
+                    placeholder="Enter project name" required>
+            <div *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched" 
+                 class="validation-error">
+              Project name is required
+            </div>
           </div>
 
           <div>
@@ -24,46 +28,72 @@
 
         <div class="form-grid">
           <div>
-            <label class="form-label">Development Type</label>
-            <select class="form-input" formControlName="developmentType">
+            <label class="form-label">Development Type <span class="text-red-500">*</span></label>
+            <select class="form-input" formControlName="developmentType" required>
               <option value="" disabled selected>Select development type</option>
               <option *ngFor="let type of developmentTypes" [value]="type">{{type}}</option>
             </select>
+            <div *ngIf="projectForm.get('developmentType')?.invalid && projectForm.get('developmentType')?.touched" 
+                 class="validation-error">
+              Development type is required
+            </div>
           </div>
           <div *ngIf="selectedClassTypes.length > 0">
             <label class="form-label">
-              Type of {{projectForm.get('developmentType')?.value?.split(' - ')[0]}}
+              Type of {{projectForm.get('developmentType')?.value?.split(' - ')[0]}} <span class="text-red-500">*</span>
             </label>
-            <select class="form-input" formControlName="classType">
+            <select class="form-input" formControlName="classType" required>
               <option value="" disabled selected>Select {{projectForm.get('developmentType')?.value?.split(' - ')[0]}} type</option>
               <option *ngFor="let type of selectedClassTypes" [value]="type">{{type}}</option>
             </select>
           </div>
           <div>
-            <label class="form-label">Development Status</label>
-            <select class="form-input" formControlName="developmentStatus">
+            <label class="form-label">Development Status <span class="text-red-500">*</span></label>
+            <select class="form-input" formControlName="developmentStatus" required>
               <option value="" disabled selected>Select development status</option>
               <option *ngFor="let status of developmentStatuses" [value]="status">{{status}}</option>
             </select>
+            <div *ngIf="projectForm.get('developmentStatus')?.invalid && projectForm.get('developmentStatus')?.touched" 
+                 class="validation-error">
+              Development status is required
+            </div>
           </div>
         </div>
 
         <div class="form-grid">
           <div>
-            <label class="form-label">Property Size (acres)</label>
+            <label class="form-label">Property Size (acres) <span class="text-red-500">*</span></label>
             <input type="number" min="0" class="form-input" formControlName="propertySize" 
-                    placeholder="Enter acres">
+                    placeholder="Enter acres" required>
+            <div *ngIf="projectForm.get('propertySize')?.invalid && projectForm.get('propertySize')?.touched" 
+                 class="validation-error">
+              <div *ngIf="projectForm.get('propertySize')?.errors?.['required']">
+                Property size is required
+              </div>
+              <div *ngIf="projectForm.get('propertySize')?.errors?.['min']">
+                Property size must be greater than 0
+              </div>
+            </div>
           </div>
           <div>
-            <label class="form-label">Building Height (feet)</label>
+            <label class="form-label">Building Height (feet) <span class="text-red-500">*</span></label>
             <input type="number" min="0" class="form-input" formControlName="buildingHeight" 
-                    placeholder="Enter height in feet">
+                    placeholder="Enter height in feet" required>
+            <div *ngIf="projectForm.get('buildingHeight')?.invalid && projectForm.get('buildingHeight')?.touched" 
+                 class="validation-error">
+              <div *ngIf="projectForm.get('buildingHeight')?.errors?.['required']">
+                Building height is required
+              </div>
+              <div *ngIf="projectForm.get('buildingHeight')?.errors?.['min']">
+                Building height must be greater than 0
+              </div>
+            </div>
           </div>
         </div>
 
         <div>
-          <label class="form-label">Number of Adjacent Streets</label>
-          <select class="form-input" formControlName="numberOfStreets">
+          <label class="form-label">Number of Adjacent Streets <span class="text-red-500">*</span></label>
+          <select class="form-input" formControlName="numberOfStreets" required>
             <option [value]="0" disabled selected>Select Number of Adjacent Streets</option>
             <option *ngFor="let number of [1, 2, 3, 4]" [value]="number">
               {{number}} {{number === 1 ? 'Street' : 'Streets'}}
@@ -74,26 +104,38 @@
         <!-- Adjacent Streets -->
         <div class="space-y-4" *ngIf="numberOfStreetsToShow > 0">
           <div *ngFor="let i of [].constructor(numberOfStreetsToShow); let index = index">
-            <label class="form-label">Adjacent Street {{index + 1}}</label>
-            <select class="form-input" [formControlName]="'adjacentStreet' + (index + 1)">
+            <label class="form-label">Adjacent Street {{index + 1}} <span class="text-red-500">*</span></label>
+            <select class="form-input" [formControlName]="'adjacentStreet' + (index + 1)" required>
               <option value="" disabled selected>Select street {{index + 1}} type</option>
               <option *ngFor="let type of streetTypes" [value]="type">{{type}}</option>
             </select>
+            <div *ngIf="projectForm.get('adjacentStreet' + (index + 1))?.invalid && projectForm.get('adjacentStreet' + (index + 1))?.touched" 
+                 class="validation-error">
+              Adjacent street {{index + 1}} is required
+            </div>
           </div>
         </div>
 
         <div>
-          <label class="form-label">Floodplain</label>
-          <select class="form-input" formControlName="floodplainZone">
+          <label class="form-label">Floodplain <span class="text-red-500">*</span></label>
+          <select class="form-input" formControlName="floodplainZone" required>
             <option value="" disabled selected>Select floodplain zone</option>
             <option *ngFor="let zone of floodplainZones" [value]="zone">{{zone}}</option>
           </select>
+          <div *ngIf="projectForm.get('floodplainZone')?.invalid && projectForm.get('floodplainZone')?.touched" 
+                 class="validation-error">
+              Floodplain zone is required
+            </div>
         </div>
 
         <div *ngIf="isTestMode">
-          <label class="form-label">Test Query</label>
+          <label class="form-label">Test Query <span class="text-red-500">*</span></label>
           <textarea class="form-input min-h-[100px]" formControlName="testQuery" 
-                    placeholder="Enter your test query"></textarea>
+                    placeholder="Enter your test query" required></textarea>
+            <div *ngIf="projectForm.get('testQuery')?.invalid && projectForm.get('testQuery')?.touched" 
+              class="validation-error">
+              Test query is required
+            </div>
         </div>
 
         <button type="submit" class="form-button">

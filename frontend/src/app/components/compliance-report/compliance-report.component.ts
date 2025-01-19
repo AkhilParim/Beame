@@ -137,6 +137,7 @@ export class ComplianceReportComponent implements OnInit {
   }
 
   backToProjects() {
-    this.router.navigate(['/new-project']);
+    if(this.formData.testQuery) { this.router.navigate(['/admin/test-api']); }
+    else { this.router.navigate(['/new-project']); }
   }
 } 

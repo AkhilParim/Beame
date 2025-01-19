@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { 
   DevelopmentClass, 
   developmentClasses, 
@@ -9,6 +9,7 @@ import {
   floodplainZones 
 } from '../../data/form-data';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-new-project',
@@ -30,25 +31,42 @@ export class NewProjectComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToastService
   ) {
     this.isTestMode = this.route.snapshot.data['isTestMode'] || false;
 
     this.projectForm = this.fb.group({
-      projectName: [''],
+      projectName: ['', this.isTestMode ? [] : [Validators.required]],
       projectDescription: [''],
-      developmentType: [''],
-      classType: [''],
-      developmentStatus: [''],
-      propertySize: [''],
-      buildingHeight: [''],
-      numberOfStreets: [1],
-      adjacentStreet1: [''],
+      developmentType: ['', Validators.required],
+      classType: ['', Validators.required],
+      developmentStatus: ['', Validators.required],
+      propertySize: ['', [Validators.required, Validators.min(0)]],
+      buildingHeight: ['', [Validators.required, Validators.min(0)]],
+      numberOfStreets: [1, Validators.required],
+      adjacentStreet1: ['', Validators.required],
       adjacentStreet2: [''],
       adjacentStreet3: [''],
       adjacentStreet4: [''],
-      floodplainZone: [''],
-      testQuery: ['']
+      floodplainZone: ['', Validators.required],
+      testQuery: ['', this.isTestMode ? [Validators.required] : []]
+    });
+
+    this.projectForm.get('numberOfStreets')?.valueChanges.subscribe(newNumberOfStreets => {
+      // Reset values for removed streets and set validators for added streets
+      const numStreets = Number(newNumberOfStreets);
+      
+      for (let i = 1; i <= 4; i++) {
+        const streetControl = this.projectForm.get(`adjacentStreet${i}`)!;
+        if (i <= numStreets) {
+          streetControl.setValidators([Validators.required]);
+        } else {
+          streetControl.clearValidators();
+          this.projectForm.patchValue({ [`adjacentStreet${i}`]: '' });
+        }
+        streetControl.updateValueAndValidity();
+      }
     });
 
     this.projectForm.get('developmentType')?.valueChanges.subscribe(selectedType => {
@@ -56,20 +74,20 @@ export class NewProjectComponent {
       const selectedClass = this.developmentClasses.find(dc => dc.name === selectedType);
       this.selectedClassTypes = selectedClass?.types || [];
     });
-
-    this.projectForm.get('numberOfStreets')?.valueChanges.subscribe(newNumberOfStreets => {
-      // Only reset values for removed streets
-      for (let i = Number(newNumberOfStreets) + 1; i <= 4; i++) {
-        const key = `adjacentStreet${i}`;
-        this.projectForm.patchValue({ [key]: '' });
-      }
-    });
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
       const formData = this.projectForm.value;
       this.router.navigate(['/report'], { state: { formData } });
+    } else {
+      Object.keys(this.projectForm.controls).forEach(key => {
+        const control = this.projectForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
+      this.toastService.showToast('Please fill in all required fields');
     }
   }
 
