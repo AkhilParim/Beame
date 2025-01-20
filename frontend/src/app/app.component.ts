@@ -10,7 +10,10 @@ import { AsyncPipe, CommonModule } from '@angular/common';
   imports: [RouterOutlet, ToastComponent, AsyncPipe, CommonModule],
   template: `
     <router-outlet />
-    <app-toast *ngIf="toastService.message$ | async as message" [message]="message" />
+    <app-toast 
+      *ngIf="toastService.message$ | async as message" 
+      [message]="message.text"
+      [state]="message.state" />
   `
 })
 export class AppComponent {

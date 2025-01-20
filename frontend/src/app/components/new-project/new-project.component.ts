@@ -12,6 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { DesignConstraintsComponent } from '../design-constraints/design-constraints.component';
 import { NoWheelDirective } from '../../directives/no-wheel.directive';
+import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directive';
 
 @Component({
   selector: 'app-new-project',
@@ -20,7 +21,8 @@ import { NoWheelDirective } from '../../directives/no-wheel.directive';
     CommonModule, 
     ReactiveFormsModule, 
     DesignConstraintsComponent,
-    NoWheelDirective
+    NoWheelDirective,
+    NoEnterSubmitDirective
   ],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
@@ -85,6 +87,11 @@ export class NewProjectComponent {
     });
   }
 
+  onDesignConstraintsSave(data: any) {
+    this.designConstraintsData = data;
+    this.toastService.showToast('Design constraints saved successfully', 'success');
+  }
+
   onSubmit() {
     if (this.projectForm.valid) {
       const formData = {
@@ -100,7 +107,7 @@ export class NewProjectComponent {
           control.markAsTouched();
         }
       });
-      this.toastService.showToast('Please fill in all required fields');
+      this.toastService.showToast('Please fill in all required fields', 'error');
     }
   }
 

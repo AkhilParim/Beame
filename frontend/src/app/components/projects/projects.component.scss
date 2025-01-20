@@ -19,8 +19,8 @@
       @apply flex gap-4;
 
       .action-btn {
-        @apply inline-flex justify-center items-center gap-4 px-4 py-2 bg-black text-white
-               rounded-md text-sm font-semibold transition-colors h-10;
+        @apply inline-flex justify-center items-center gap-4 px-4 py-2 bg-gray-900 text-white
+               rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors h-10;
 
         &:disabled {
           @apply cursor-not-allowed bg-gray-400 hover:bg-gray-400;

@@ -3,11 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { developmentClasses } from '../../data/form-data';
 import { NoWheelDirective } from '../../directives/no-wheel.directive';
+import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directive';
 
 @Component({
   selector: 'app-design-constraints',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NoWheelDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NoWheelDirective,
+    NoEnterSubmitDirective
+  ],
   templateUrl: './design-constraints.component.html',
   styleUrl: './design-constraints.component.scss'
 })

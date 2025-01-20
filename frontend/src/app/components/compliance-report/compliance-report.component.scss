@@ -155,10 +155,6 @@
   animation: spin 1s linear infinite;
 }
 
-.report-status {
-  @apply flex items-center gap-4 p-4 bg-blue-50 rounded-md mt-8;
-}
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -166,7 +162,7 @@
 }
 
 @media print {
-  .back-button, .print-button, .section-loading, .section-error, .report-status {
+  .back-button, .print-button, .section-loading, .section-error {
     @apply hidden;
   }
 

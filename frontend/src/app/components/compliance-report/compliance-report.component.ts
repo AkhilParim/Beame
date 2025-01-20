@@ -32,7 +32,6 @@ export class ComplianceReportComponent implements OnInit {
   formData: {
     project: any;
     designConstraints: any;
-    testQuery?: string;
   };
   reportSections: ReportSection[] = [];
   isGenerating = false;
@@ -116,7 +115,7 @@ export class ComplianceReportComponent implements OnInit {
       }
 
       constraints.newParkingLot ? details += `\nNew Parking Lot is constructed` : '';
-      if (constraints.newParkingLot && constraints.parkingLot) {
+      if (constraints.newParkingLot && (constraints.parkingLot.area || constraints.parkingLot.numberOfSpots || constraints.parkingLot.stallWidth || constraints.parkingLot.stallLength)) {
         details += '\nNew Parking Lot Details:\n';
         if (constraints.parkingLot.area) details += `- Area: ${constraints.parkingLot.area} sq ft\n`;
         if (constraints.parkingLot.numberOfSpots) details += `- Number of Spots: ${constraints.parkingLot.numberOfSpots}\n`;
@@ -137,13 +136,13 @@ export class ComplianceReportComponent implements OnInit {
         }
       }
 
-      if (constraints.imperviousArea) {
+      if (constraints.imperviousArea.area || constraints.imperviousArea.percentage) {
         details += '\n\nImpervious Area:\n';
         if (constraints.imperviousArea.area) details += `- Area: ${constraints.imperviousArea.area} sq ft\n`;
         if (constraints.imperviousArea.percentage) details += `- Percentage: ${constraints.imperviousArea.percentage}%\n`;
       }
 
-      if (constraints.perviousArea) {
+      if (constraints.perviousArea.area || constraints.perviousArea.percentage) {
         details += '\nPervious Area:\n';
         if (constraints.perviousArea.area) details += `- Area: ${constraints.perviousArea.area} sq ft\n`;
         if (constraints.perviousArea.percentage) details += `- Percentage: ${constraints.perviousArea.percentage}%\n`;
@@ -172,8 +171,8 @@ export class ComplianceReportComponent implements OnInit {
     this.isGenerating = true;
     this.completedApiCalls = 0;
     
-    const questions: ComplianceQuestion[] = this.formData.testQuery ? 
-      [{title: 'Test Query', question: this.formData.testQuery}] : // Use test query if available
+    const questions: ComplianceQuestion[] = this.formData.project.testQuery ? 
+      [{title: 'Test Query', question: this.formData.project.testQuery}] : // Use test query if available
       complianceQuestions;
 
     this.totalApiCalls = questions.length;
@@ -217,7 +216,7 @@ export class ComplianceReportComponent implements OnInit {
   }
 
   backToProjects() {
-    if(this.formData.testQuery) { this.router.navigate(['/admin/test-api']); }
+    if(this.formData.project.testQuery) { this.router.navigate(['/admin/test-api']); }
     else { this.router.navigate(['/new-project']); }
   }
 } 
