@@ -11,11 +11,17 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { DesignConstraintsComponent } from '../design-constraints/design-constraints.component';
+import { NoWheelDirective } from '../../directives/no-wheel.directive';
 
 @Component({
   selector: 'app-new-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DesignConstraintsComponent],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    DesignConstraintsComponent,
+    NoWheelDirective
+  ],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
 })
@@ -23,6 +29,7 @@ export class NewProjectComponent {
   projectForm: FormGroup;
   isTestMode = false;
   showDesignConstraints = false;
+  designConstraintsData: any;
 
   developmentClasses: DevelopmentClass[] = developmentClasses;
   developmentStatuses = developmentStatuses;
@@ -80,7 +87,11 @@ export class NewProjectComponent {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      const formData = this.projectForm.value;
+      const formData = {
+        project: this.projectForm.value,
+        designConstraints: this.designConstraintsData
+      };
+      
       this.router.navigate(['/report'], { state: { formData } });
     } else {
       Object.keys(this.projectForm.controls).forEach(key => {

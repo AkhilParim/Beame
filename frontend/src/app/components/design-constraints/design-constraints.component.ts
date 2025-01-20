@@ -2,16 +2,18 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { developmentClasses } from '../../data/form-data';
+import { NoWheelDirective } from '../../directives/no-wheel.directive';
 
 @Component({
   selector: 'app-design-constraints',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NoWheelDirective],
   templateUrl: './design-constraints.component.html',
   styleUrl: './design-constraints.component.scss'
 })
 export class DesignConstraintsComponent {
   @Output() close = new EventEmitter<void>();
+  @Output() save = new EventEmitter<any>();
   constraintsForm: FormGroup;
   developmentClasses = developmentClasses;
 
@@ -130,8 +132,8 @@ export class DesignConstraintsComponent {
 
   onSubmit() {
     if (this.constraintsForm.valid) {
-      console.log(this.constraintsForm.value);
-    //   this.onClose();
+        this.save.emit(this.constraintsForm.value);
+      this.onClose();
     }
   }
 

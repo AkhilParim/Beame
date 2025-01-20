@@ -147,7 +147,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h4 class="text-sm font-medium text-gray-900">Design Constraints (Optional)</h4>
-                <p class="text-sm text-gray-500">You can also add it later in <strong>Your Projects</strong></p>
+                <p class="text-sm text-gray-500">You can add it later in <strong>Your Projects</strong></p>
               </div>
               <button type="button" (click)="showDesignConstraints = true">
                 Add Design Constraints
@@ -164,4 +164,4 @@
   </div>
 </div>
 
-<app-design-constraints *ngIf="showDesignConstraints" (close)="showDesignConstraints = false"></app-design-constraints>
+<app-design-constraints *ngIf="showDesignConstraints" (close)="showDesignConstraints = false" (save)="this.designConstraintsData = $event"></app-design-constraints>
