@@ -1,0 +1,86 @@
+.projects-container {
+  @apply relative p-6 min-h-screen mx-auto max-w-6xl;
+
+  .header {
+    @apply mb-8;
+
+    .back-btn {
+      @apply flex items-center justify-between;
+      span {
+        @apply text-lg;
+      }
+    }
+
+    h1 {
+      @apply text-2xl font-bold;
+    }
+
+    .actions {
+      @apply flex gap-4;
+
+      .action-btn {
+        @apply inline-flex justify-center items-center gap-4 px-4 py-2 bg-black text-white
+               rounded-md text-sm font-semibold transition-colors h-10;
+
+        &:disabled {
+          @apply cursor-not-allowed bg-gray-400 hover:bg-gray-400;
+        }
+
+        .icon {
+          @apply text-lg;
+        }
+      }
+    }
+  }
+
+  .projects-grid {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+    .project-card {
+      @apply bg-white rounded-lg border border-gray-100 cursor-pointer p-7 shadow-sm
+                transition-all duration-300 transform;
+
+      &:hover {
+        @apply shadow-lg -translate-y-1;
+      }
+
+      &.selected {
+        @apply ring-2 ring-[#14162E] border-transparent;
+      }
+
+      .project-header {
+        @apply flex justify-between items-center mb-6;
+
+        h2 {
+          @apply text-xl font-bold text-gray-900;
+        }
+
+        .delete-btn {
+          @apply text-xs bg-transparent border-0 cursor-pointer hover:text-gray-600;
+        }
+      }
+
+      .description {
+        @apply text-base text-gray-500 mb-4;
+      }
+
+      .tags {
+        @apply flex gap-1.5 flex-wrap mb-4;
+
+        .tag {
+          @apply bg-gray-50 text-gray-600 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+      }
+    }
+  }
+
+  .create-project-btn {
+    @apply fixed bottom-6 right-6 flex items-center gap-2 bg-gray-900 text-white
+           px-4 py-2 rounded-lg text-sm shadow-lg hover:bg-gray-800 transition-colors;
+
+    .icon {
+      @apply text-gray-400 text-xs;
+    }
+  }
+} 

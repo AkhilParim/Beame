@@ -1,0 +1,316 @@
+<div class="dialog-overlay">
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h2>Design Constraints</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <form [formGroup]="constraintsForm" (ngSubmit)="onSubmit()">
+      <div class="form-section">
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="cityFundedPublicProject">
+            City funded/public project
+          </label>
+
+          <div class="nested-options" [class.expanded]="constraintsForm.get('cityFundedPublicProject')?.value">
+            <div formGroupName="street">
+              <h2>Street</h2>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedCurb">
+                  Proposed curb
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="noCurb">
+                  No curb
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedStreetWidening">
+                  Proposed street widening
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedMarkings">
+                  Proposed markings
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedConcrete">
+                  Proposed concrete
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedAsphalt">
+                  Proposed asphalt
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedNewROW">
+                  Proposed new ROW
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedDriveway">
+                  Proposed driveway
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedSignage">
+                  Proposed signage
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedDrainage">
+                  Proposed drainage
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="utilityRelocation">
+                  Utility Relocation
+                </label>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Extension width (feet)</label>
+                  <input type="number" class="form-input" formControlName="extensionWidth" 
+                         min="0" (input)="handleNumberInput($event)"
+                         placeholder="Enter width">
+                </div>
+                <div class="form-group">
+                  <label>Proposed ROW width (feet)</label>
+                  <input type="number" class="form-input" formControlName="proposedROWWidth" 
+                         min="0" (input)="handleNumberInput($event)"
+                         placeholder="Enter width">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Proposed street width (feet)</label>
+                <input type="number" class="form-input" formControlName="proposedStreetWidth" 
+                       min="0" (input)="handleNumberInput($event)"
+                       placeholder="Enter width">
+              </div>
+            </div>
+
+            <div formGroupName="sidewalk">
+              <h2>Sidewalk</h2>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedSidewalkRepair">
+                  Proposed Sidewalk repair
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedSidewalk">
+                  Proposed sidewalk
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedSidewalkExtension">
+                  Proposed sidewalk extension
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="proposedRamp">
+                  Proposed ramp
+                </label>
+              </div>
+
+              <div class="form-group">
+                <label>Proposed sidewalk width (feet)</label>
+                <input type="number" class="form-input" formControlName="proposedSidewalkWidth" 
+                       min="0" (input)="handleNumberInput($event)"
+                       placeholder="Enter width">
+              </div>
+            </div>
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="abandonedEasement">
+            Abandoned Easement
+          </label>
+          
+          <div class="nested-options"></div>  <!-- Dummy div - just to maintain the spacing as Abandoned Easement doesn't have any nested options -->
+
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="protectedTreesPresent">
+            Protected Trees Present
+          </label>
+
+          <div class="nested-options" [class.expanded]="constraintsForm.get('protectedTreesPresent')?.value">
+            <div class="form-group">
+              <label>Type of Protected Tree Type</label>
+              <select class="form-input" formControlName="protectedTreeType">
+                <option value="" disabled selected>Select tree type</option>
+                @for (type of protectedTreeTypes; track type) {
+                  <option [value]="type">{{ type }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="siteEnlargement">
+            Site Enlargement
+          </label>
+
+          <div class="nested-options" [class.expanded]="constraintsForm.get('siteEnlargement')?.value">
+            <div class="form-group">
+              <label>Enlargement Area (square feet)</label>
+              <input type="number" class="form-input" formControlName="enlargementArea" 
+                        min="0" (input)="handleNumberInput($event)"
+                        placeholder="Enter area in square feet">
+            </div>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="newParkingLot">
+            New Parking Lot
+          </label>
+
+          <div class="nested-options" [class.expanded]="constraintsForm.get('newParkingLot')?.value">
+            <div formGroupName="parkingLot">
+              <div class="form-group">
+                <label>Parking Lot Area (square feet)</label>
+                <input type="number" class="form-input" formControlName="area" 
+                        min="0" (input)="handleNumberInput($event)"
+                        placeholder="Enter parking lot area in square feet">
+              </div>
+
+              <div class="form-group">
+                <label>Number of Parking Spots</label>
+                <input type="number" class="form-input" formControlName="numberOfSpots" 
+                        min="0" (input)="handleNumberInput($event)"
+                        placeholder="Enter number of parking spots">
+              </div>
+
+              <div class="form-group">
+                <label>Stall Width (feet)</label>
+                <input type="number" class="form-input" formControlName="stallWidth" 
+                        min="0" (input)="handleNumberInput($event)"
+                        placeholder="Enter stall width in feet">
+              </div>
+
+              <div class="form-group">
+                <label>Stall Length (feet)</label>
+                <input type="number" class="form-input" formControlName="stallLength" 
+                        min="0" (input)="handleNumberInput($event)"
+                        placeholder="Enter stall length in feet">
+              </div>
+            </div>
+          </div>
+          
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="hasAdjacentProperties">
+            Adjacent Properties
+          </label>
+  
+          <div class="nested-options" [class.expanded]="constraintsForm.get('hasAdjacentProperties')?.value">
+            <div formGroupName="adjacentProperties">
+              <!-- Front Adjacent Properties -->
+              <div class="property-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="frontPresent">
+                  Front Adjacent Properties
+                </label>
+  
+                <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.frontPresent')?.value">
+                  <h2>Front Property Types</h2>
+                  <div class="checkbox-group">
+                    @for (class of developmentClasses; track class.name) {
+                      <label class="checkbox-label">
+                        <input type="checkbox" 
+                               [checked]="isPropertyTypeSelected('front', class.name)"
+                               (change)="handlePropertyTypeChange($event, 'front', class.name)">
+                        {{ class.name }}
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Side Adjacent Properties -->
+              <div class="property-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="sidePresent">
+                  Side Adjacent Properties
+                </label>
+  
+                <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.sidePresent')?.value">
+                  <h2>Side Property Types</h2>
+                  <div class="checkbox-group">
+                    @for (class of developmentClasses; track class.name) {
+                      <label class="checkbox-label">
+                        <input type="checkbox" 
+                               [checked]="isPropertyTypeSelected('side', class.name)"
+                               (change)="handlePropertyTypeChange($event, 'side', class.name)">
+                        {{ class.name }}
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Rear Adjacent Properties -->
+              <div class="property-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="rearPresent">
+                  Rear Adjacent Properties
+                </label>
+  
+                <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.rearPresent')?.value">
+                  <h2>Rear Property Types</h2>
+                  <div class="checkbox-group">
+                    @for (class of developmentClasses; track class.name) {
+                      <label class="checkbox-label">
+                        <input type="checkbox" 
+                               [checked]="isPropertyTypeSelected('rear', class.name)"
+                               (change)="handlePropertyTypeChange($event, 'rear', class.name)">
+                        {{ class.name }}
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:flex gap-4">
+            <div formGroupName="imperviousArea" class="area-inputs">
+              <h3>Impervious Area</h3>
+              <div class="input-group">
+                <input type="number" class="form-input" formControlName="area" 
+                       min="0" (input)="handleNumberInput($event)"
+                       placeholder="Area in square feet">
+                <input type="number" class="form-input" formControlName="percentage" 
+                       min="0" max="100" (input)="handleNumberInput($event)"
+                       placeholder="Percentage">
+              </div>
+            </div>
+    
+            <div formGroupName="perviousArea" class="area-inputs">
+              <h3>Pervious Area</h3>
+              <div class="input-group">
+                <input type="number" class="form-input" formControlName="area" 
+                       min="0" (input)="handleNumberInput($event)"
+                       placeholder="Area in square feet">
+                <input type="number" class="form-input" formControlName="percentage" 
+                       min="0" max="100" (input)="handleNumberInput($event)"
+                       placeholder="Percentage">
+              </div>
+            </div>
+
+        </div>
+
+
+        <div class="form-group md:w-1/2">
+          <label>Minimum Building Distance from Property Line</label>
+          <input type="number" class="form-input" formControlName="minimumBuildingDistance" 
+                 min="0" (input)="handleNumberInput($event)"
+                 placeholder="Enter distance in feet">
+        </div>
+
+        <div class="form-group">
+            <label>Additional Notes</label>
+            <textarea class="form-input" formControlName="additionalNotes" 
+                      placeholder="Enter any additional design constraints or requirements"></textarea>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button type="submit" class="save-btn">Save Constraints</button>
+      </div>
+    </form>
+  </div>
+</div> 
