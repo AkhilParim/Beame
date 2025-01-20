@@ -10,17 +10,19 @@ import {
 } from '../../data/form-data';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { DesignConstraintsComponent } from '../design-constraints/design-constraints.component';
 
 @Component({
   selector: 'app-new-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DesignConstraintsComponent],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
 })
 export class NewProjectComponent {
   projectForm: FormGroup;
   isTestMode = false;
+  showDesignConstraints = false;
 
   developmentClasses: DevelopmentClass[] = developmentClasses;
   developmentStatuses = developmentStatuses;

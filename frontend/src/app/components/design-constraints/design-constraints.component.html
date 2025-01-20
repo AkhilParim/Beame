@@ -16,7 +16,7 @@
           <div class="nested-options" [class.expanded]="constraintsForm.get('cityFundedPublicProject')?.value">
             <div formGroupName="street">
               <h2>Street</h2>
-              <div class="checkbox-group">
+              <div class="checkbox-group !mb-5">
                 <label class="checkbox-label">
                   <input type="checkbox" formControlName="proposedCurb">
                   Proposed curb
@@ -88,7 +88,7 @@
 
             <div formGroupName="sidewalk">
               <h2>Sidewalk</h2>
-              <div class="checkbox-group">
+              <div class="checkbox-group !mb-5">
                 <label class="checkbox-label">
                   <input type="checkbox" formControlName="proposedSidewalkRepair">
                   Proposed Sidewalk repair
@@ -159,7 +159,7 @@
           </label>
 
           <div class="nested-options" [class.expanded]="constraintsForm.get('newParkingLot')?.value">
-            <div formGroupName="parkingLot">
+            <div formGroupName="parkingLot" class="space-y-4">
               <div class="form-group">
                 <label>Parking Lot Area (square feet)</label>
                 <input type="number" class="form-input" formControlName="area" 
@@ -206,7 +206,7 @@
   
                 <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.frontPresent')?.value">
                   <h2>Front Property Types</h2>
-                  <div class="checkbox-group">
+                  <div class="checkbox-group !mb-5">
                     @for (class of developmentClasses; track class.name) {
                       <label class="checkbox-label">
                         <input type="checkbox" 
@@ -228,7 +228,7 @@
   
                 <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.sidePresent')?.value">
                   <h2>Side Property Types</h2>
-                  <div class="checkbox-group">
+                  <div class="checkbox-group !mb-5">
                     @for (class of developmentClasses; track class.name) {
                       <label class="checkbox-label">
                         <input type="checkbox" 
@@ -250,7 +250,7 @@
   
                 <div class="nested-options" [class.expanded]="constraintsForm.get('adjacentProperties.rearPresent')?.value">
                   <h2>Rear Property Types</h2>
-                  <div class="checkbox-group">
+                  <div class="checkbox-group !mb-5">
                     @for (class of developmentClasses; track class.name) {
                       <label class="checkbox-label">
                         <input type="checkbox" 

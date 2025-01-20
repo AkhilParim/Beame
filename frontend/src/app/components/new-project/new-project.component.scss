@@ -35,3 +35,19 @@
 textarea.form-input {
   @apply h-24;
 }
+
+
+.advanced-options {
+  @apply border-t border-gray-200 pt-6;
+  button {
+    @apply px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-md text-sm font-medium;
+    @apply hover:bg-gray-50 transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2;
+  }
+  .bg-gray-50 {
+    @apply transition-colors;
+    &:hover {
+      @apply bg-gray-100;
+    }
+  }
+}

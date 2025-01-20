@@ -16,11 +16,9 @@ export class DesignConstraintsComponent {
   developmentClasses = developmentClasses;
 
   protectedTreeTypes = [
-    'Corridor Tree/ Green Corridor Tree',
-    'Heritage Tree',
-    'Significant Tree',
-    'Park Tree',
-    'Street Tree'
+    'Corridor Tree/Green Corridor Tree',
+    'Parkway Tree',
+    'Other'
   ];
 
   constructor(private fb: FormBuilder) {

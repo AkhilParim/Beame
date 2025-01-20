@@ -76,11 +76,11 @@
   }
 
   .create-project-btn {
-    @apply fixed bottom-6 right-6 flex items-center gap-2 bg-gray-900 text-white
-           px-4 py-2 rounded-lg text-sm shadow-lg hover:bg-gray-800 transition-colors;
+    @apply fixed bottom-6 right-6 flex items-center gap-4 bg-gray-900 text-white
+        h-11 rounded-lg text-sm font-medium px-8 shadow-lg hover:bg-gray-800 transition-colors;
 
     .icon {
-      @apply text-gray-400 text-xs;
+      @apply text-lg;
     }
   }
 } 

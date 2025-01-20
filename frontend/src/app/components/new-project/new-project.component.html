@@ -91,27 +91,31 @@
           </div>
         </div>
 
-        <div>
-          <label class="form-label">Number of Adjacent Streets <span class="text-red-500">*</span></label>
-          <select class="form-input" formControlName="numberOfStreets" required>
-            <option [value]="0" disabled selected>Select Number of Adjacent Streets</option>
-            <option *ngFor="let number of [1, 2, 3, 4]" [value]="number">
-              {{number}} {{number === 1 ? 'Street' : 'Streets'}}
-            </option>
-          </select>
-        </div>
-
-        <!-- Adjacent Streets -->
-        <div class="space-y-4" *ngIf="numberOfStreetsToShow > 0">
-          <div *ngFor="let i of [].constructor(numberOfStreetsToShow); let index = index">
-            <label class="form-label">Adjacent Street {{index + 1}} <span class="text-red-500">*</span></label>
-            <select class="form-input" [formControlName]="'adjacentStreet' + (index + 1)" required>
-              <option value="" disabled selected>Select street {{index + 1}} type</option>
-              <option *ngFor="let type of streetTypes" [value]="type">{{type}}</option>
+        <div class="streets-section">
+          <div>
+            <label class="form-label">Number of Adjacent Streets <span class="text-red-500">*</span></label>
+            <select class="form-input" formControlName="numberOfStreets" required>
+              <option [value]="0" disabled selected>Select Number of Adjacent Streets</option>
+              <option *ngFor="let number of [1, 2, 3, 4]" [value]="number">
+                {{number}} {{number === 1 ? 'Street' : 'Streets'}}
+              </option>
             </select>
-            <div *ngIf="projectForm.get('adjacentStreet' + (index + 1))?.invalid && projectForm.get('adjacentStreet' + (index + 1))?.touched" 
-                 class="validation-error">
-              Adjacent street {{index + 1}} is required
+          </div>
+
+          <!-- Adjacent Streets -->
+          <div class="bg-gray-50 rounded-lg p-4 mt-2" *ngIf="numberOfStreetsToShow > 0">
+            <div class="space-y-4">
+              <div *ngFor="let i of [].constructor(numberOfStreetsToShow); let index = index">
+                <label class="form-label">Adjacent Street {{index + 1}} <span class="text-red-500">*</span></label>
+                <select class="form-input" [formControlName]="'adjacentStreet' + (index + 1)" required>
+                  <option value="" disabled selected>Select street {{index + 1}} type</option>
+                  <option *ngFor="let type of streetTypes" [value]="type">{{type}}</option>
+                </select>
+                <div *ngIf="projectForm.get('adjacentStreet' + (index + 1))?.invalid && projectForm.get('adjacentStreet' + (index + 1))?.touched" 
+                     class="validation-error">
+                  Adjacent street {{index + 1}} is required
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,7 +129,7 @@
           <div *ngIf="projectForm.get('floodplainZone')?.invalid && projectForm.get('floodplainZone')?.touched" 
                  class="validation-error">
               Floodplain zone is required
-            </div>
+          </div>
         </div>
 
         <div *ngIf="isTestMode">
@@ -138,6 +142,20 @@
             </div>
         </div>
 
+        <div class="advanced-options">
+          <div class="bg-gray-50 p-4 rounded-lg space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">Design Constraints (Optional)</h4>
+                <p class="text-sm text-gray-500">You can also add it later in <strong>Your Projects</strong></p>
+              </div>
+              <button type="button" (click)="showDesignConstraints = true">
+                Add Design Constraints
+              </button>
+            </div>
+          </div>
+        </div>
+
         <button type="submit" class="form-button">
           {{isTestMode ? 'Test Query' : 'Generate Report'}}
         </button>
@@ -145,3 +163,5 @@
     </form>
   </div>
 </div>
+
+<app-design-constraints *ngIf="showDesignConstraints" (close)="showDesignConstraints = false"></app-design-constraints>
