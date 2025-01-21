@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://beame.org/api'
-}; 
+  apiUrl: `${window.location.origin}/api` // Dynamically setting the API base URL
+};

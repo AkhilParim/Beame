@@ -10,6 +10,7 @@ import {
 } from '../../data/form-data';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { ProjectStorageService } from '../../services/project-storage.service';
 import { DesignConstraintsComponent } from '../design-constraints/design-constraints.component';
 import { NoWheelDirective } from '../../directives/no-wheel.directive';
 import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directive';
@@ -43,7 +44,8 @@ export class NewProjectComponent {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private projectStorage: ProjectStorageService
   ) {
     this.isTestMode = this.route.snapshot.data['isTestMode'] || false;
 
@@ -99,7 +101,15 @@ export class NewProjectComponent {
         designConstraints: this.designConstraintsData
       };
       
-      this.router.navigate(['/report'], { state: { formData } });
+      // Add project to storage and set as current
+      let savedProject;
+      if (this.isTestMode) {
+        savedProject = formData;  // no storage for test mode
+      } else {
+        savedProject = this.projectStorage.addProject(formData);
+      }
+      
+      this.router.navigate(['/report'], { state: { formData: savedProject, isTestMode: this.isTestMode } });
     } else {
       Object.keys(this.projectForm.controls).forEach(key => {
         const control = this.projectForm.get(key);

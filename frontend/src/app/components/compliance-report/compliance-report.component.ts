@@ -5,6 +5,7 @@ import { AppService } from '../../services/app.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { complianceQuestions, ComplianceQuestion } from '../../data/compliance-questions';
+import { Project } from '../../app.interface';
 
 interface QueryResponse {
   content: string;
@@ -29,13 +30,11 @@ interface ReportSection {
   styleUrl: './compliance-report.component.scss'
 })
 export class ComplianceReportComponent implements OnInit {
-  formData: {
-    project: any;
-    designConstraints: any;
-  };
+  formData: Project;
   reportSections: ReportSection[] = [];
   isGenerating = false;
   reportDate = new Date().toLocaleDateString();
+  isTestMode: any;
   private completedApiCalls = 0;
   private totalApiCalls = 0;
 
@@ -45,7 +44,8 @@ export class ComplianceReportComponent implements OnInit {
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.formData = navigation?.extras?.state?.['formData'];
-    
+    this.isTestMode = navigation?.extras?.state?.['isTestMode'];
+
     if (!this.formData) {
       this.router.navigate(['/new-project']);
     }
@@ -63,7 +63,7 @@ export class ComplianceReportComponent implements OnInit {
 
     const adjacentStreets = [];
     for (let i = 1; i <= Number(project.numberOfStreets); i++) {
-      const street = project[`adjacentStreet${i}`];
+      const street = project[`adjacentStreet${i}` as keyof typeof project];
       if (street) {
         adjacentStreets.push(street.toString());
       }
@@ -216,7 +216,7 @@ export class ComplianceReportComponent implements OnInit {
   }
 
   backToProjects() {
-    if(this.formData.project.testQuery) { this.router.navigate(['/admin/test-api']); }
-    else { this.router.navigate(['/new-project']); }
+    if(this.isTestMode) { this.router.navigate(['/admin/test-api']); }
+    else { this.router.navigate(['/projects']); }
   }
 } 

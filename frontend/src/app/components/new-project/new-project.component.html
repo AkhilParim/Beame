@@ -147,7 +147,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h4 class="text-sm font-medium text-gray-900">Design Constraints (Optional)</h4>
-                <p class="text-sm text-gray-500">You can add it later in <strong>Your Projects</strong></p>
+                <p class="text-sm text-gray-500">You can add or edit it later in <strong>Your Projects</strong></p>
               </div>
               <button type="button" (click)="showDesignConstraints = true">
                 Add Design Constraints
@@ -166,6 +166,7 @@
 
 <app-design-constraints 
   *ngIf="showDesignConstraints" 
+  [isProjectsPage]="false"
   (close)="showDesignConstraints = false" 
   (save)="onDesignConstraintsSave($event)">
 </app-design-constraints>

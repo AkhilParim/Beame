@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { developmentClasses } from '../../data/form-data';
@@ -17,7 +17,9 @@ import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directi
   templateUrl: './design-constraints.component.html',
   styleUrl: './design-constraints.component.scss'
 })
-export class DesignConstraintsComponent {
+export class DesignConstraintsComponent implements OnInit {
+  @Input() designConstraints?: any;
+  @Input() isProjectsPage = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
   constraintsForm: FormGroup;
@@ -89,6 +91,13 @@ export class DesignConstraintsComponent {
     });
   }
 
+  ngOnInit() {
+    if (this.isProjectsPage && this.designConstraints) {
+      this.constraintsForm.reset();
+      this.constraintsForm.patchValue(this.designConstraints);
+    }
+  }
+
   handleNumberInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = Number(input.value);
@@ -138,9 +147,13 @@ export class DesignConstraintsComponent {
 
   onSubmit() {
     if (this.constraintsForm.valid) {
-        this.save.emit(this.constraintsForm.value);
+      this.save.emit(this.constraintsForm.value);
       this.onClose();
     }
+  }
+
+  get submitButtonText(): string {
+    return this.isProjectsPage ? 'Save and Generate Report' : 'Save Constraints';
   }
 
   onClose() {

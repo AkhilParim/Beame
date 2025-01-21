@@ -1,7 +1,7 @@
 <div *ngIf="isGenerating" class="generating-banner">
     <div class="flex items-center gap-2">
         <div class="spinner"></div>
-        <p>Report is still being generated. Please don't leave this page.</p>
+        <p>Report is still being generated. Please don't close this page.</p>
     </div>
 </div>
 
@@ -9,7 +9,7 @@
     <div class="report-header">
         <div class="header-left">
             <button (click)="backToProjects()" class="back-button">
-                ← Back
+                {{ isTestMode ? '← Back to Test API' : '← Back to Projects' }}
             </button>
             <h1>Construction Compliance Report</h1>
         </div>
