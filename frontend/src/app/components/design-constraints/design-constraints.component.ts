@@ -18,11 +18,11 @@ import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directi
   styleUrl: './design-constraints.component.scss'
 })
 export class DesignConstraintsComponent implements OnInit {
-  @Input() designConstraints?: any;
+  @Input() designConstraints?: any;  // TODO: could give a type
   @Input() isProjectsPage = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
-  constraintsForm: FormGroup;
+  constraintsForm: FormGroup;  // TODO: could give a type
   developmentClasses = developmentClasses;
 
   protectedTreeTypes = [

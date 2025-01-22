@@ -28,9 +28,16 @@ export class ProjectsComponent {
     }
   }
 
-  generateReport(): void {
+  viewReport(): void {
     if (!this.selectedProject) return;
-    // TODO: Implement report generation
+    
+    // Navigate to report page to view existing report
+    this.router.navigate(['/report'], { 
+      state: { 
+        formData: this.selectedProject,
+        isNewReport: false
+      } 
+    });
   }
 
   createProject() {

@@ -1,27 +1,34 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { Project } from '../app.interface';
+import { ReportSection } from '../app.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectStorageService {
-  private projectsSubject = new BehaviorSubject<Project[]>([]); // TODO: Might need to remove this
+    private readonly PROJECTS_STORAGE_KEY = 'projects';
+  private readonly REPORTS_STORAGE_KEY = 'project_reports';
 
   constructor() {
     this.initializeProjects();
+    this.initializeReports();
   }
 
   private initializeProjects(): void {
-    if (!localStorage.getItem('projects')) {
-      localStorage.setItem('projects', JSON.stringify([]));
+    if (!localStorage.getItem(this.PROJECTS_STORAGE_KEY)) {
+      localStorage.setItem(this.PROJECTS_STORAGE_KEY, JSON.stringify([]));
     }
     const projects = this.getProjects();
-    this.projectsSubject.next(projects);
+  }
+
+  private initializeReports(): void {
+    if (!localStorage.getItem(this.REPORTS_STORAGE_KEY)) {
+      localStorage.setItem(this.REPORTS_STORAGE_KEY, JSON.stringify({}));
+    }
   }
 
   getProjects(): Project[] {
-    return JSON.parse(localStorage.getItem('projects') || '[]');
+    return JSON.parse(localStorage.getItem(this.PROJECTS_STORAGE_KEY) || '[]');
   }
 
   addProject(projectData: Omit<Project, 'id' | 'createdAt'>): Project {
@@ -68,7 +75,24 @@ export class ProjectStorageService {
   }
 
   private saveProjects(projects: Project[]): void {
-    localStorage.setItem('projects', JSON.stringify(projects));
-    this.projectsSubject.next(projects);
+    localStorage.setItem(this.PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+  }
+
+  saveProjectReport(projectId: number, reportSections: ReportSection[]): void {
+    const reports = this.getProjectReports();
+    reports[projectId] = reportSections.map(section => ({
+      title: section.title,
+      output: section.response?.output || null
+    }));
+    localStorage.setItem(this.REPORTS_STORAGE_KEY, JSON.stringify(reports));
+  }
+
+  getProjectReport(projectId: number): { title: string; output: string | null; }[] | null {
+    const reports = this.getProjectReports();
+    return reports[projectId] || null;
+  }
+
+  private getProjectReports(): { [key: number]: { title: string; output: string | null; }[] } {
+    return JSON.parse(localStorage.getItem(this.REPORTS_STORAGE_KEY) || '{}');
   }
 } 

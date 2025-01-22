@@ -29,7 +29,7 @@ import { NoEnterSubmitDirective } from '../../directives/no-enter-submit.directi
   styleUrl: './new-project.component.scss'
 })
 export class NewProjectComponent {
-  projectForm: FormGroup;
+  projectForm: FormGroup; // TODO: could give a type
   isTestMode = false;
   showDesignConstraints = false;
   designConstraintsData: any;
@@ -46,7 +46,7 @@ export class NewProjectComponent {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private projectStorage: ProjectStorageService
-  ) {
+  ) { //TODO: allow max 3 projects in demo mode
     this.isTestMode = this.route.snapshot.data['isTestMode'] || false;
 
     this.projectForm = this.fb.group({
@@ -109,7 +109,7 @@ export class NewProjectComponent {
         savedProject = this.projectStorage.addProject(formData);
       }
       
-      this.router.navigate(['/report'], { state: { formData: savedProject, isTestMode: this.isTestMode } });
+      this.router.navigate(['/report'], { state: { formData: savedProject, isTestMode: this.isTestMode, isNewReport: true } });
     } else {
       Object.keys(this.projectForm.controls).forEach(key => {
         const control = this.projectForm.get(key);

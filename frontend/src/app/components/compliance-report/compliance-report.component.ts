@@ -6,21 +6,9 @@ import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { complianceQuestions, ComplianceQuestion } from '../../data/compliance-questions';
 import { Project } from '../../app.interface';
-
-interface QueryResponse {
-  content: string;
-  thought: string;
-  action: string;
-  observation: string;
-  output: string;
-}
-
-interface ReportSection {
-  title: string;
-  response: QueryResponse | null;
-  isLoading: boolean;
-  error: string | null;
-}
+import { ReportSection } from '../../app.interface';
+import { ProjectStorageService } from '../../services/project-storage.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-compliance-report',
@@ -35,27 +23,55 @@ export class ComplianceReportComponent implements OnInit {
   isGenerating = false;
   reportDate = new Date().toLocaleDateString();
   isTestMode: any;
+  isNewReport: boolean;
   private completedApiCalls = 0;
   private totalApiCalls = 0;
 
   constructor(
     private router: Router,
-    private appService: AppService
+    private appService: AppService,
+    private projectStorage: ProjectStorageService,
+    private toastService: ToastService
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.formData = navigation?.extras?.state?.['formData'];
     this.isTestMode = navigation?.extras?.state?.['isTestMode'];
+    this.isNewReport = navigation?.extras?.state?.['isNewReport'] ?? true;
 
-    if (!this.formData) {
-      this.router.navigate(['/new-project']);
+    if (!this.formData || (!this.isTestMode && !this.formData.id)) {
+      this.toastService.showToast('Project data not found', 'error');
+      this.router.navigate(['/projects']);
+      return;
     }
   }
 
   ngOnInit() {
+    // If it's not a new report and not test mode, try to load from storage first
+    if (!this.isNewReport && !this.isTestMode) {
+      const storedReport = this.projectStorage.getProjectReport(this.formData.id!);
+      if (storedReport) {
+        // Convert stored report back to ReportSection format
+        this.reportSections = storedReport.map(item => ({
+          title: item.title,
+          response: item.output ? {
+            content: '',
+            thought: '',
+            action: '',
+            observation: '',
+            output: item.output
+          } : null,
+          isLoading: false,
+          error: null
+        }));
+        return;
+      }
+    }
+
+    // If we're here, either it's a new report or we couldn't find a stored report
     this.generateReport();
   }
 
-  formatProjectDetails(): string {
+  formatProjectDetails(): string {  // TODO: could move to a service
     if (!this.formData) return '';
 
     const project = this.formData.project;
@@ -164,6 +180,10 @@ export class ComplianceReportComponent implements OnInit {
     this.completedApiCalls++;
     if (this.completedApiCalls === this.totalApiCalls) {
       this.isGenerating = false;
+      // If we are here and are in test mode, we don't need to save the report
+      if (!this.isTestMode) {
+        this.projectStorage.saveProjectReport(this.formData.id!, this.reportSections);
+      }
     }
   }
 

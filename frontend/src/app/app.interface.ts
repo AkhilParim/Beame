@@ -32,3 +32,10 @@ export interface Project {
     observation: string;
     output: string;
   } 
+
+  export interface ReportSection {
+    title: string;
+    response: QueryResponse | null;
+    isLoading: boolean;
+    error: string | null;
+  }
