@@ -46,7 +46,7 @@ export class NewProjectComponent {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private projectStorage: ProjectStorageService
-  ) { //TODO: allow max 3 projects in demo mode
+  ) {
     this.isTestMode = this.route.snapshot.data['isTestMode'] || false;
 
     this.projectForm = this.fb.group({

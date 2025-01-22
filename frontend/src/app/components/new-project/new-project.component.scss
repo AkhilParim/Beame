@@ -7,7 +7,7 @@
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-10;
+  @apply w-full px-3 py-2 border border-gray-200 rounded-md text-sm h-10;
   @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2;
 
   &.ng-invalid.ng-touched {

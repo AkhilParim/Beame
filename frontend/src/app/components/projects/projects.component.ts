@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { DesignConstraintsComponent } from '../design-constraints/design-constraints.component';
 import { ProjectStorageService } from '../../services/project-storage.service';
-import { Project } from '../../app.interface';
+import { Project } from '../../interfaces/app.interface';
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -19,6 +19,8 @@ export class ProjectsComponent {
   projects: Project[] = [];
   selectedProject: Project | null = null;
   showDesignConstraints = false;
+  showDeleteModal = false;
+  projectToDelete: Project | null = null;
 
   selectProject(project: Project): void {
     if (this.selectedProject?.id === project.id) {
@@ -67,5 +69,29 @@ export class ProjectsComponent {
 
     // Navigate to report page with the updated project
     this.router.navigate(['/report'], { state: { formData: savedProject } });
+  }
+
+  deleteProject(event: Event, project: Project): void {
+    event.stopPropagation(); // Prevent project selection when clicking delete
+    this.projectToDelete = project;
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.projectToDelete) return;
+    
+    this.projectStorage.deleteProject(this.projectToDelete.id!);
+    this.projects = this.projectStorage.getProjects();
+    
+    if (this.selectedProject?.id === this.projectToDelete.id) {
+      this.selectedProject = null;
+    }
+    
+    this.closeDeleteModal();
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.projectToDelete = null;
   }
 } 

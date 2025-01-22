@@ -9,7 +9,7 @@ import { ToastState } from '../../services/toast.service';
   template: `
     <div *ngIf="visible" 
          [class]="getToastClasses()"
-         class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-up flex items-center">
+         class="border fixed right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in flex items-center">
        {{ message }} <!-- TODO: add icon -->
     </div>
   `,
@@ -37,15 +37,14 @@ export class ToastComponent implements OnInit, OnDestroy {
   private timeout: any;
 
   getToastClasses(): string {
-    const baseClasses = 'border';
     switch (this.state) {
       case 'success':
-        return `${baseClasses} bg-green-200 text-green-800 border-green-400`;
-      case 'info':
-        return `${baseClasses} bg-blue-200 text-blue-800 border-blue-400`;
+        return `bottom-4 bg-green-200 text-green-800 border-green-400`;
       case 'error':
+        return `top-4 bg-red-200 text-red-800 border-red-400`;
+      case 'info':
       default:
-        return `${baseClasses} bg-red-200 text-red-800 border-red-400`;
+        return `bottom-4 bg-blue-200 text-blue-800 border-blue-400`;
     }
   }
 

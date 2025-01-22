@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Project } from '../app.interface';
-import { ReportSection } from '../app.interface';
+import { Project, ReportSection } from '../interfaces/app.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,6 @@ export class ProjectStorageService {
     if (!localStorage.getItem(this.PROJECTS_STORAGE_KEY)) {
       localStorage.setItem(this.PROJECTS_STORAGE_KEY, JSON.stringify([]));
     }
-    const projects = this.getProjects();
   }
 
   private initializeReports(): void {
@@ -65,12 +63,15 @@ export class ProjectStorageService {
   deleteProject(id: number): boolean {
     const projects = this.getProjects();
     const filteredProjects = projects.filter(p => p.id !== id);
-    
     if (filteredProjects.length === projects.length) {
-      return false; // Project not found
+      return false;
     }
+
+    const reports = this.getProjectReports();
+    delete reports[id];
     
     this.saveProjects(filteredProjects);
+    this.saveProjectReports(reports);
     return true;
   }
 
@@ -84,6 +85,10 @@ export class ProjectStorageService {
       title: section.title,
       output: section.response?.output || null
     }));
+    this.saveProjectReports(reports);
+  }
+
+  private saveProjectReports(reports: { [key: number]: { title: string; output: string | null; }[] }): void {
     localStorage.setItem(this.REPORTS_STORAGE_KEY, JSON.stringify(reports));
   }
 

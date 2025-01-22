@@ -60,13 +60,20 @@
           @apply text-xl font-bold text-gray-900;
         }
 
-        .delete-btn {
-          @apply text-xs bg-transparent border-0 cursor-pointer text-gray-400 hover:text-gray-600;
+        .trash-icon {
+            @apply h-8 w-8 hover:bg-red-100 flex items-center justify-center rounded-md;
+            img {
+                filter: invert(77%) sepia(18%) saturate(184%) hue-rotate(179deg) brightness(82%) contrast(87%);
+                @apply h-4 w-4 text-gray-100;
+            }
+            &:hover img {
+                filter: invert(44%) sepia(50%) saturate(4801%) hue-rotate(336deg) brightness(99%) contrast(109%);
+            }
         }
       }
 
       .description {
-        @apply text-base text-gray-500 mb-4;
+        @apply text-base text-gray-500 mb-4 h-6;
       }
 
       .tags {

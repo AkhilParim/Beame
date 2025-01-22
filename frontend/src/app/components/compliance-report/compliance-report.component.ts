@@ -5,8 +5,8 @@ import { AppService } from '../../services/app.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { complianceQuestions, ComplianceQuestion } from '../../data/compliance-questions';
-import { Project } from '../../app.interface';
-import { ReportSection } from '../../app.interface';
+import { Project } from '../../interfaces/app.interface';
+import { ReportSection } from '../../interfaces/app.interface';
 import { ProjectStorageService } from '../../services/project-storage.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -48,7 +48,7 @@ export class ComplianceReportComponent implements OnInit {
   ngOnInit() {
     // If it's not a new report and not test mode, try to load from storage first
     if (!this.isNewReport && !this.isTestMode) {
-      const storedReport = this.projectStorage.getProjectReport(this.formData.id!);
+      const storedReport = this.projectStorage.getProjectReport(this.formData.id!);  // TODO: some sections could be null, fetch them from the API
       if (storedReport) {
         // Convert stored report back to ReportSection format
         this.reportSections = storedReport.map(item => ({
@@ -180,7 +180,8 @@ export class ComplianceReportComponent implements OnInit {
     this.completedApiCalls++;
     if (this.completedApiCalls === this.totalApiCalls) {
       this.isGenerating = false;
-      // If we are here and are in test mode, we don't need to save the report
+
+      // If we are not in test mode, save the report
       if (!this.isTestMode) {
         this.projectStorage.saveProjectReport(this.formData.id!, this.reportSections);
       }
