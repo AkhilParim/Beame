@@ -11,12 +11,12 @@
     </div>
     <div class="actions">
       <button class="action-btn" [disabled]="!selectedProject" (click)="viewReport()">
-        <!-- <span class="icon">+</span> -->
-        View Report <!-- TODO: add icon -->
+        <span class="icon h-5 w-5"><img [src]="'assets/view.svg'" alt="view"></span>
+        View Report
       </button>
       <button class="action-btn" [disabled]="!selectedProject" (click)="addDesignConstraints()">
-        <!-- <span class="icon">+</span> -->
-        Edit Design Constraints <!-- TODO: add icon -->
+        <span class="icon h-5 w-5"><img [src]="'assets/file-sliders.svg'" alt="edit"></span>
+        Edit Design Constraints
       </button>
     </div>
   </div>
@@ -59,7 +59,7 @@
   <div class="flex-none">
     @if (projects.length > 0) {
       <button class="create-project-btn persistent-btn" (click)="createProject()">
-        <span class="icon">+</span>
+        <span class="icon h-5 w-5"><img [src]="'assets/circle-plus.svg'" alt="create"></span>
         Create Project
       </button>
     }

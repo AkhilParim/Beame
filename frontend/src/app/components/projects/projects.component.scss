@@ -19,15 +19,15 @@
       @apply flex gap-4;
 
       .action-btn {
-        @apply inline-flex justify-center items-center gap-4 px-4 py-2 bg-gray-900 text-white
-               rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors h-10;
+        @apply inline-flex justify-center items-center gap-3 px-4 py-3 bg-gray-900 text-white
+               rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors;
 
         &:disabled {
           @apply cursor-not-allowed bg-gray-400 hover:bg-gray-400;
         }
 
         .icon {
-          @apply text-lg;
+            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
         }
       }
     }
@@ -88,10 +88,10 @@
 
   .create-project-btn {
     @apply flex items-center gap-4 bg-gray-900 text-white
-           h-11 rounded-md text-sm font-medium px-8 shadow-lg hover:bg-gray-800 transition-colors;
+           h-11 rounded-md text-sm font-medium px-6 shadow-lg hover:bg-gray-800 transition-colors;
 
     .icon {
-      @apply text-lg;
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
     }
 
     &.persistent-btn {
